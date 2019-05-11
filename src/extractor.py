@@ -3,15 +3,25 @@ from pint import UnitRegistry
 from fractions import Fraction
 
 ureg = UnitRegistry()
-    
-def extract(text, text2):
-    # text2 is second line
-    tokens1 = text.lower().replace("pound-feet", "pound feet").split()
-    tokens2 = text2.lower().replace("pound-feet", "pound feet").split()
-    text = tokens1 + tokens2
+
+def extract(captions):
+    strings = [t['text'] for t in captions]
+    for cap, nums in zip(captions, extract_inner(strings)):
+        cap['values'] = nums
+    return captions
+
+
+def extract_inner(strings):
+    token_list = [s.lower().replace("pound-feet", "pound feet").split() for s in strings]
+    text = sum(token_list, [])
+    final = [[] for _ in range(len(strings))]
+    idxs = []
+    for idx, t in enumerate(token_list):
+        for _ in range(len(t)):
+            idxs.append(idx)
     cooldown = 0
-    final = []
-    for index, element in enumerate(tokens1):
+    for index, element in enumerate(text):
+
         if cooldown > 1:
             cooldown -= 1
             continue
@@ -44,7 +54,7 @@ def extract(text, text2):
         # at this point, candidate contains the number part as a float
 
         if index+cooldown < len(text) and text[index+cooldown] in ("dollar", "dollars"):
-            final.append((candidate, "dollar"))
+            final[idxs[index]].append((candidate, "dollar"))
             cooldown += 1
             continue
 
@@ -57,10 +67,10 @@ def extract(text, text2):
             if doeswork(ureg, metric):
                 final_m = ureg(metric)
         try:
-            final.append(candidate * final_m)
+            final[idxs[index]].append(candidate * final_m)
         except:
             pass
-    return(final)
+    return final
 
 
 def doeswork(function, element):
@@ -71,7 +81,7 @@ def doeswork(function, element):
         return False
 
 def transform_to_digit(digit):
-    print(digit)
+    # print(digit)
     nums = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,"nine":9, 'ten':10,'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,'sixteen':16,'seventeen':17,'eighteen':18,'nineteen':19, 'twenty':20,'thirty':30,'forty':40,'fifty':50,'sixty':60,'seventy':70,'eighty':80,'ninety':90, 'hundred':100,'thousand':1000, 'million':1000000, 'billion': 1000000000}
     nums_10 = [0,1,2,3,4,5,6,7,8,9]
     digit = [d for d in digit.split() if d != "and"]
@@ -121,4 +131,3 @@ def transform_to_digit(digit):
     return(float(final))
 
 
-print(transform_to_digit('point three million'))
