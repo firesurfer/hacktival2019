@@ -1,6 +1,5 @@
 from pint import UnitRegistry
 import math
-from copy import deepcopy
 
 ureg = UnitRegistry(system='mks')  # metric
 
@@ -14,7 +13,7 @@ class Converter:
             "euro": 1.12,
             "pound": 1.3
         }
-        self.length = [
+        self.length_comp = [
             (0.1 * ureg.millimeter, "length", "{:.2f} x the width human hair"),
             (878.36 * ureg.kilometer, "length", "{:.2f} x the distance Paris -> Berlin"),
             (384400 * ureg.kilometer, "length", "{:.2f} x the distance to the moon")
@@ -26,14 +25,14 @@ class Converter:
             (19390000000000, "dollar", "{:.2f} x the US GDP")
         ]
 
-        #self.area = {  # in m^2
-        #    "soccer field": 7140,
-        #    "table tennis": 4.1785
-        #}
+        self.area_comp = {  # in m^2
+            "soccer field": 7140,
+            "table tennis": 4.1785
+        }
         self.latest_measurement = None
 
     def number_beautifier(self,n):
-        millnames = ['', ' Thousand', ' Million', ' Billion', ' Trillion']
+        millnames = ['', ' thousand', ' million', ' billion', ' trillion']
         n = float(n)
         millidx = max(0, min(len(millnames) - 1,
                              int(math.floor(0 if n == 0 else math.log10(abs(n)) / 3))))
@@ -53,7 +52,7 @@ class Converter:
             else:
                 converted = (dollarvalue, "dollar")
 
-            convertedstring = self.number_beautifier(converted[0]) + " " + converted[1]
+            convertedstring = self.number_beautifier(converted[0]) + " " + converted[1] + "s"
             output.append((convertedstring, converted[1]))
             compstrings = self.relate_to(dollarvalue, self.money_comp)
             for comp in compstrings:
@@ -66,7 +65,7 @@ class Converter:
             compstrings = []
             ureg.default_system = 'mks'
             if input.to_base_units().units == "meter":
-                compstrings = self.relate_to(input, self.length)
+                compstrings = self.relate_to(input, self.length_comp)
             for comp in compstrings:
                 output.append(comp)
 
