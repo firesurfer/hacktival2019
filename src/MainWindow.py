@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QStyle, QWidget, QGraphicsTextItem, QGraphicsView, QGraphicsScene, QSpacerItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QStyle, QWidget, QGraphicsTextItem, QGraphicsView, QGraphicsScene, QSpacerItem, QListWidget, QListWidgetItem
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
 from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF
 from PyQt5 import QtCore
-from PyQt5.QtGui import QPixmap, QImage, QFont         
+from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon      
 import os
 from Downloader import SubscriptionDownloader
 
@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
 
     def initUI(self):
        
-        self.resize(400,400)
+        self.resize(1500,800)
         
         self.setWindowTitle("Automatisches Einheiten in Relationssetzungsprogramm")
         centralWidget = MainWidget(self.loader)
@@ -42,12 +42,16 @@ class MainWidget(QWidget):
      
     def initUI(self):
         self.mainLayout = QHBoxLayout()
+        self.notificationList = QListWidget()
+        self.notificationList.setMinimumWidth(350)
+        self.notificationList.setMaximumWidth(400)
+        
         self.playerLayout = QVBoxLayout()
 
 
         
         self.mainLayout.addLayout(self.playerLayout)
-
+        self.mainLayout.addWidget(self.notificationList)
         
         #Media player widget
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
@@ -56,61 +60,14 @@ class MainWidget(QWidget):
         self.videoWidget = QVideoWidget()
         
         
-        #Units label
-        unitsLayout = QHBoxLayout()
-        
-        if(os.path.isfile("./icon/index.png")):
-            unitsImg = QPixmap.fromImage(QImage("./icon/index.png"))
-            self.unitsIcon = QLabel()
-            self.unitsIcon.setPixmap(unitsImg.scaled(40,40))
-            unitsLayout.addWidget(self.unitsIcon)
-        
-        self.topUnits = QLabel("Units:")
-        self.topUnits.setFont(QFont('Arial', 20))
 
-
-        unitsLayout.addWidget(self.topUnits)
-        unitsLayout.addStretch(1)
        
         
         self.mediaPlayer.setVideoOutput(self.videoWidget)
-        self.playerLayout.addLayout(unitsLayout)
+        #self.playerLayout.addLayout(unitsLayout)
         self.playerLayout.addWidget(self.videoWidget)
         
-        relationLayout = QHBoxLayout()
-        
-        #Icons and Labels
-        if(os.path.isfile("./icon/environment.png")):
-            environmentImg = QPixmap.fromImage(QImage("./icon/environment.png"))
-            self.environmentIcon = QLabel()
-            self.environmentIcon.setPixmap(environmentImg.scaled(40,40))
-            relationLayout.addWidget(self.environmentIcon)
-            
-        self.environmentText = QLabel("Text")
-        self.environmentText.setFont(QFont('Arial', 20))
-        relationLayout.addWidget(self.environmentText)
-        relationLayout.addStretch(1)
-        
-        if(os.path.isfile("./icon/military.png")):
-            militaryImg = QPixmap.fromImage(QImage("./icon/military.png"))
-            self.militaryIcon = QLabel()
-            self.militaryIcon.setPixmap(militaryImg.scaled(40,40))
-            relationLayout.addWidget(self.militaryIcon)
-        self.militaryText = QLabel("Text")
-        self.militaryText.setFont(QFont('Arial', 20))
-        relationLayout.addWidget(self.militaryText)
-        relationLayout.addStretch(1)
-        
-        if(os.path.isfile("./icon/social.png")):
-            socialImg = QPixmap.fromImage(QImage("./icon/social.png"))
-            self.socialIcon = QLabel()
-            self.socialIcon.setPixmap(socialImg.scaled(40,40))
-            relationLayout.addWidget(self.socialIcon)
-        self.socialText = QLabel("Text")
-        self.socialText.setFont(QFont('Arial', 20))
-        relationLayout.addWidget(self.socialText)
-        
-        self.playerLayout.addLayout(relationLayout)
+       
         
         self.subtitleLabel = QLabel()
         self.subtitleLabel.setFont(QFont('Arial', 15))
@@ -167,6 +124,19 @@ class MainWidget(QWidget):
         self.positionSlider.setValue(position)
         self.timeLabel.setText(self.humanize_time(self.mediaPlayer.position()/1000))
         self.subtitleLabel.setText("Subtitles: " + self.loader.subtitleAtPosition(position/1000))
+        
+        #Get Texts in this form:
+        # 1. original value
+        # 2. conversion
+        # 3. relations
+        # Create a list in the previous order and create list of the same size containing the icons (as pixmaps).
+        # Example for reading a pixmap environmentImg = QPixmap.fromImage(QImage("./icon/environment.png"))
+        # Create a CustomListItem with both lists as argument
+        # Use this code:
+        # myItem = CustomListItem(list1, list2)
+        # for item in myItem.getListItems():
+        #    self.notificationList.addItem(item)
+        # self.notificationList.scrollToBottom()
     def scrollBarChanged(self):
         self.mediaPlayer.setPosition(self.positionSlider.value())
 
@@ -184,6 +154,20 @@ class MainWidget(QWidget):
         
 
         
+class CustomListItem():
+    def __init__(self, texts, icons):
+        if len(texts) != len(icons):
+            raise Exception("Size of texts list and size of icon list must be the same")
+        
+        self.items = []
+        for index, text in enumerate(texts):
+            item = QListWidgetItem()
+            item.setText(text)
+            item.setFont(QFont("Arial",20))
+            item.setIcon(icons[index].scaled(40,40))        
+            self.items.append(item)
+    def getListItems(self):
+        return self.items
 
         
         
