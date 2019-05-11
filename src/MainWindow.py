@@ -23,8 +23,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Automatisches Einheiten in Relationssetzungsprogramm")
         centralWidget = MainWidget()
         self.setCentralWidget(centralWidget)
-        
-        centralWidget.openVideo(self.loader.videoPath())
+
+        centralWidget.openVideo(os.path.abspath(self.loader.videoPath()))
             
        
         
