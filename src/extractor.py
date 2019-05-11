@@ -57,6 +57,10 @@ def extract_inner(strings):
             final[idxs[index]].append((candidate, "dollar"))
             cooldown += 1
             continue
+        if index+cooldown < len(text) and text[index+cooldown] in ("people", "humans"):
+            final[idxs[index]].append((candidate, "people"))
+            cooldown += 1
+            continue
 
         metric = str()
         final_m = 0
