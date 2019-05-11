@@ -47,10 +47,11 @@ class SubscriptionDownloader:
                         
                         if  float(start) > float(secs):
                             text = ""
-                            if window and False: 
-                                if index > 0:
-                                    prevVal = value[index-1]
-                                    text += prevVal["text"] + " "
+                            #If you need the step before comment in
+                            #if window:  
+                            #    if index > 0:
+                            #        prevVal = value[index-1]
+                            #        text += prevVal["text"] + " "
                             
                             text += val["text"] + " "
                             if window:
