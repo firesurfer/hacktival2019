@@ -3,7 +3,7 @@ from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
 from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF
 from PyQt5 import QtCore
-
+from PyQt5.QtGui import QPixmap, QImage          
 
 
 class MainWindow(QMainWindow):
@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):
 
     def initUI(self):
        
-        
+        self.resize(400,400)
         
         self.setWindowTitle("Automatisches Einheiten in Relationssetzungsprogramm")
         centralWidget = MainWidget()
@@ -54,28 +54,56 @@ class MainWidget(QWidget):
         
         #Media player widget
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
-        # Graphics scene needed for overlay
-        self.videoView = QGraphicsView()
-        self.videoScene = QGraphicsScene()
-        self.videoWidget = QGraphicsVideoItem()
-        self.videoView.setScene(self.videoScene)
 
+       
+        self.videoWidget = QVideoWidget()
         
-        self.videoScene.addItem(self.videoWidget)
         
-        self.topOverlay = QLabel("Top")
-        self.topOverlay.setAttribute(Qt.WA_TranslucentBackground)
-        self.bottomOverlay = QLabel("Bottom")
-        self.bottomOverlay.setAttribute(Qt.WA_TranslucentBackground)
+        #Units label
+        unitsLayout = QHBoxLayout()
         
-        self.proxyTop = self.videoScene.addWidget(self.topOverlay)
-        self.proxyTop.setPos(10,10)
-        self.proxyBottom = self.videoScene.addWidget(self.bottomOverlay)
-        self.proxyBottom.setPos(10,self.videoScene.height()-20)
+        unitsImg = QPixmap.fromImage(QImage("./icon/index.jpeg"))
+        self.unitsIcon = QLabel()
+        self.unitsIcon.setPixmap(unitsImg.scaled(40,40))
+        
+        self.topUnits = QLabel("Units:")
+        unitsLayout.addWidget(self.unitsIcon)
+        unitsLayout.addWidget(self.topUnits)
+       
         
         self.mediaPlayer.setVideoOutput(self.videoWidget)
+        self.playerLayout.addLayout(unitsLayout)
+        self.playerLayout.addWidget(self.videoWidget)
         
-        self.playerLayout.addWidget(self.videoView)
+        relationLayout = QHBoxLayout()
+        
+        #Icons and Labels
+        environmentImg = QPixmap.fromImage(QImage("./icon/environment.png"))
+        self.environmentIcon = QLabel()
+   
+        self.environmentIcon.setPixmap(environmentImg.scaled(40,40))
+        self.environmentText = QLabel("Text")
+        
+        militaryImg = QPixmap.fromImage(QImage("./icon/military.png"))
+        self.militaryIcon = QLabel()
+        self.militaryIcon.setPixmap(militaryImg.scaled(40,40))
+        self.militaryText = QLabel("Text")
+        
+        socialImg = QPixmap.fromImage(QImage("./icon/social.png"))
+        self.socialIcon = QLabel()
+        self.socialIcon.setPixmap(socialImg.scaled(40,40))
+        self.socialText = QLabel("Text")
+        
+        relationLayout.addWidget(self.environmentIcon)
+        relationLayout.addWidget(self.environmentText)
+        relationLayout.addStretch(1)
+        relationLayout.addWidget(self.militaryIcon)
+        relationLayout.addWidget(self.militaryText)
+        relationLayout.addStretch(1)
+        relationLayout.addWidget(self.socialIcon)
+        relationLayout.addWidget(self.socialText)
+        
+        self.playerLayout.addLayout(relationLayout)
         
         controlLayout = QHBoxLayout()
         #Player button
@@ -83,10 +111,14 @@ class MainWidget(QWidget):
         self.startStopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
         controlLayout.addWidget(self.startStopBtn)
         
+        
         #Player position
         self.positionSlider = QSlider(Qt.Horizontal)
         self.positionSlider.setRange(0, 0)
         controlLayout.addWidget(self.positionSlider)
+        
+        self.timeLabel = QLabel("")
+        controlLayout.addWidget(self.timeLabel)
         
         self.playerLayout.addLayout(controlLayout)
         
@@ -112,9 +144,14 @@ class MainWidget(QWidget):
         else:
             self.startStopBtn.setIcon(
                     self.style().standardIcon(QStyle.SP_MediaPlay))
-
+    def humanize_time(self, secs):
+        mins, secs = divmod(secs, 60)
+        hours, mins = divmod(mins, 60)
+        return '%02d:%02d:%02d' % (hours, mins, secs)
+        
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
+        self.timeLabel.setText(self.humanize_time(self.mediaPlayer.position()/1000))
 
     def durationChanged(self, duration):
         self.positionSlider.setRange(0, duration)
@@ -123,20 +160,14 @@ class MainWidget(QWidget):
         self.mediaPlayer.setPosition(position)
         
     def resizeEvent(self, event):
-        self.resized.emit()
         
-
-        self.videoWidget.setSize(QSizeF(self.videoView.width(), self.videoView.width()))
-        self.videoScene.setSceneRect(0,0,self.videoWidget.size().width(), self.videoWidget.size().height())
-
-        self.videoWidget.setPos(0,0)
-        self.videoWidget.setOffset(QPointF(0,0))
-        self.proxyBottom.setPos(10,self.videoScene.height()-20)
-
-        self.videoView.fitInView(QRectF(0,0,self.videoView.width(), self.videoView.width()), Qt.KeepAspectRatio)
+        self.resized.emit()
         result = super(MainWidget, self).resizeEvent(event)
         return result
-    
+        
+
+        
+
         
         
         
