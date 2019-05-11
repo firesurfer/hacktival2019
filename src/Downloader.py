@@ -38,16 +38,24 @@ class SubscriptionDownloader:
         for sub in self.subtitles:
             if type(sub) is dict:
                 for key,value in sub.items():
-                    for val in value:
+                    for index,val in enumerate(value):
                         #print(secs)
                         start = float(val["start"])
                         end = float(val["start"])+ float(val["duration"])
                         
                        
                         
-                        if  float(start) > float(secs): 
-                            self.lastText = val["text"]
-                            return val["text"]
+                        if  float(start) > float(secs):
+                            text = "" 
+                            if index > 0:
+                                prevVal = value[index-1]
+                                text += prevVal["text"] + " "
+                            
+                            text += val["text"] + " "
+                            nextVal = value[index+1]
+                            text += nextVal["text"] + " "
+                            self.lastText = text
+                            return text
         return self.lastText
     
 
