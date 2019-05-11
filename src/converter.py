@@ -91,3 +91,7 @@ class converter:
         return output.to_compact()
 
 
+def convert_uint(value, europe):
+    ureg.default_system = 'mks' if europe else 'imperial'
+    output = value.to_base_units()  # system defined at top (mks -> metric)
+    return f"{output.to_compact():.2f}"
