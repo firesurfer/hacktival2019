@@ -67,6 +67,8 @@ def extract_inner(strings):
             if doeswork(ureg, metric):
                 final_m = ureg(metric)
         try:
+            if final_m == 0:
+                continue
             final[idxs[index]].append(candidate * final_m)
         except:
             pass
