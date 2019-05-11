@@ -54,7 +54,10 @@ class MainWidget(QWidget):
         self.notificationList.setMaximumWidth(400)
         self.notificationList.setIconSize(QSize(45,45))
         self.playerLayout = QVBoxLayout()
-
+        
+        videoTitleLabel = QLabel(self.loader.videoTitle())
+        
+        self.playerLayout.addWidget(videoTitleLabel)
         item = QListWidgetItem()
         item.setIcon(QIcon(self.iconLoader.getIcon("environment")))
         item.setText("Test")
