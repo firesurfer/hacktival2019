@@ -15,15 +15,15 @@ class Converter:
             "pound": 1.3
         }
         self.length = [
-            (0.1 * ureg.millimeter, "length", "{:.2f} * the width human hair"),
-            (878.36 * ureg.kilometer, "length", "{:.2f} * the distance Paris -> Berlin"),
-            (384400 * ureg.kilometer, "length", "{:.2f} * the distance to the moon")
+            (0.1 * ureg.millimeter, "length", "{:.2f} x the width human hair"),
+            (878.36 * ureg.kilometer, "length", "{:.2f} x the distance Paris -> Berlin"),
+            (384400 * ureg.kilometer, "length", "{:.2f} x the distance to the moon")
         ]
         self.money_comp = [
-            (59039, "dollar", "{:.2f} * median US income p.a.", ),
-            (20700000000, "nasa", "{:.2f} * the NASA budget p.a.", ),
-            (686074048000, "military", "{:.2f} * US military budget p.a."),
-            (19390000000000, "dollar", "{:.2f} * the US GDP")
+            (59039, "dollar", "{:.2f} x median US income p.a.", ),
+            (20700000000, "nasa", "{:.2f} x the NASA budget p.a.", ),
+            (686074048000, "military", "{:.2f} x US military budget p.a."),
+            (19390000000000, "dollar", "{:.2f} x the US GDP")
         ]
 
         #self.area = {  # in m^2
@@ -75,7 +75,7 @@ class Converter:
     def convert_currency(self, value, source_currency, goal_currency):
 
         conv = self.money_conversion
-        return (conv[goal_currency] / conv[source_currency]) * value
+        return (conv[source_currency] / conv[goal_currency]) * value
 
     def relate_to(self, value, comp_list): # expects value in Dollars
         comp_with_factors = list()
