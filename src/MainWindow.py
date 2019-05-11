@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QStyle, QWidget, QGraphicsTextItem, QGraphicsView, QGraphicsScene
+from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QStyle, QWidget, QGraphicsTextItem, QGraphicsView, QGraphicsScene, QSpacerItem
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
 from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF
 from PyQt5 import QtCore
-from PyQt5.QtGui import QPixmap, QImage          
+from PyQt5.QtGui import QPixmap, QImage, QFont         
 import os
 
 class MainWindow(QMainWindow):
@@ -69,7 +69,9 @@ class MainWidget(QWidget):
             unitsLayout.addWidget(self.unitsIcon)
         
         self.topUnits = QLabel("Units:")
-       
+        self.topUnits.setFont(QFont('Arial', 20))
+
+
         unitsLayout.addWidget(self.topUnits)
         unitsLayout.addStretch(1)
        
@@ -88,6 +90,7 @@ class MainWidget(QWidget):
             relationLayout.addWidget(self.environmentIcon)
             
         self.environmentText = QLabel("Text")
+        self.environmentText.setFont(QFont('Arial', 20))
         relationLayout.addWidget(self.environmentText)
         relationLayout.addStretch(1)
         
@@ -97,6 +100,7 @@ class MainWidget(QWidget):
             self.militaryIcon.setPixmap(militaryImg.scaled(40,40))
             relationLayout.addWidget(self.militaryIcon)
         self.militaryText = QLabel("Text")
+        self.militaryText.setFont(QFont('Arial', 20))
         relationLayout.addWidget(self.militaryText)
         relationLayout.addStretch(1)
         
@@ -106,11 +110,14 @@ class MainWidget(QWidget):
             self.socialIcon.setPixmap(socialImg.scaled(40,40))
             relationLayout.addWidget(self.socialIcon)
         self.socialText = QLabel("Text")
+        self.socialText.setFont(QFont('Arial', 20))
         relationLayout.addWidget(self.socialText)
         
         self.playerLayout.addLayout(relationLayout)
         
         controlLayout = QHBoxLayout()
+
+        controlLayout.addSpacing(10)
         #Player button
         self.startStopBtn = QPushButton()
         self.startStopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
