@@ -15,6 +15,7 @@ class SubscriptionDownloader:
         self.sub_path = self.dl_path / Path("sub.dmp")
         self.vid_path = self.dl_path / Path("vid.mp4")
         self.lastText = ""
+        self.offset = 0
         if not Path.exists(self.dl_path):
             os.makedirs(self.dl_path)
     def download(self):
@@ -31,42 +32,40 @@ class SubscriptionDownloader:
         return self.vid_path
     def subtitlePath(self):
         return self.sub_path
-    def subtitleAtPosition(self, secs):
+    def setOffset(self, off):
+        self.offset = off
+    def subtitleAtPosition(self, secs, window = True):
        
         
         
         for sub in self.subtitles:
             if type(sub) is dict:
                 for key,value in sub.items():
-                    for val in value:
+                    for index,val in enumerate(value):
                         #print(secs)
-                        start = float(val["start"])
+                        start = float(val["start"]) + self.offset
                         end = float(val["start"])+ float(val["duration"])
                         
                        
                         
-                        if  float(start) > float(secs): 
-                            self.lastText = val["text"]
-                            return val["text"]
+                        if  float(start) > float(secs):
+                            text = ""
+                            #If you need the step before comment in
+                            #if window:  
+                            #    if index > 0:
+                            #        prevVal = value[index-1]
+                            #        text += prevVal["text"] + " "
+                            
+                            text += val["text"] + " "
+                            if window:
+                                nextVal = value[index+1]
+                                text += nextVal["text"] + " "
+                            self.lastText = text
+                            return text
         return self.lastText
     
 
-def get_vid_and_sub_path(url):
-    video_id = url[url.find("v=")+2:]  # everything from the url from v= onwards
-    dl_path = Path("../dl/" + video_id + "/")
-    sub_path = dl_path / Path("sub.dmp")
-    vid_path = dl_path / Path("vid.mp4")
-
-    if not Path.exists(dl_path):
-        os.makedirs(dl_path)
-        YouTube(url).streams.first().download(dl_path, "vid")
-        sub = YouTubeTranscriptApi.get_transcripts([video_id], languages=['en'])
-        pickle.dump(sub, open(sub_path, "wb"))
-        # To load:
-        # sub = pickle.load(open(sub_path, "rb"))
-
-    return sub_path, vid_path
 
 
-if __name__ == "__main__":
-    get_vid_and_sub_path("https://www.youtube.com/watch?v=RUVs_5mbJSA")
+
+
