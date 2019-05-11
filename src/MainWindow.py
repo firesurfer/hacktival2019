@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):
         self.resize(400,400)
         
         self.setWindowTitle("Automatisches Einheiten in Relationssetzungsprogramm")
-        centralWidget = MainWidget()
+        centralWidget = MainWidget(self.loader)
         self.setCentralWidget(centralWidget)
 
         centralWidget.openVideo(os.path.abspath(self.loader.videoPath()))
@@ -30,10 +30,10 @@ class MainWindow(QMainWindow):
         
 class MainWidget(QWidget):
     resized = QtCore.pyqtSignal()
-    def __init__(self, parent=None):
+    def __init__(self,loader, parent=None):
         super().__init__(parent)
         self.initUI()
-    
+        self.loader = loader
     def openVideo(self,path):
         print(path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(str(path))))
@@ -112,6 +112,10 @@ class MainWidget(QWidget):
         
         self.playerLayout.addLayout(relationLayout)
         
+        self.subtitleLabel = QLabel()
+        self.subtitleLabel.setFont(QFont('Arial', 15))
+        self.playerLayout.addWidget(self.subtitleLabel)
+        
         controlLayout = QHBoxLayout()
 
         controlLayout.addSpacing(10)
@@ -162,6 +166,7 @@ class MainWidget(QWidget):
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
         self.timeLabel.setText(self.humanize_time(self.mediaPlayer.position()/1000))
+        self.subtitleLabel.setText("Subtitles: " + self.loader.subtitleAtPosition(position/1000))
     def scrollBarChanged(self):
         self.mediaPlayer.setPosition(self.positionSlider.value())
 

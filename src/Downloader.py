@@ -14,7 +14,7 @@ class SubscriptionDownloader:
         self.dl_path = Path("./dl/" + self.video_id + "/")
         self.sub_path = self.dl_path / Path("sub.dmp")
         self.vid_path = self.dl_path / Path("vid.mp4")
-       
+        self.lastText = ""
         if not Path.exists(self.dl_path):
             os.makedirs(self.dl_path)
     def download(self):
@@ -31,8 +31,24 @@ class SubscriptionDownloader:
         return self.vid_path
     def subtitlePath(self):
         return self.sub_path
-    def subtitleAtPosition(self):
-        pass
+    def subtitleAtPosition(self, secs):
+       
+        
+        
+        for sub in self.subtitles:
+            if type(sub) is dict:
+                for key,value in sub.items():
+                    for val in value:
+                        #print(secs)
+                        start = float(val["start"])
+                        end = float(val["start"])+ float(val["duration"])
+                        
+                       
+                        
+                        if  float(start) > float(secs): 
+                            self.lastText = val["text"]
+                            return val["text"]
+        return self.lastText
     
 
 def get_vid_and_sub_path(url):
