@@ -32,11 +32,12 @@ def my_function(input_str):
     ("15 miles per gallon", 15 * ureg.mile / ureg.gallon),
     ("1 mile per gallon", 1 * ureg.mile / ureg.gallon),
     ("fifty two billion dollar ", (52_000_000_000, "dollar")),
-    ("38 billion dollar", (52_000_000_000, "dollar")),
+    ("38 billion dollar", (38_000_000_000, "dollar")),
     ("hundred and forty three billion dollars", (143_000_000_000, "dollar")),
     ("four billion dollars", (4_000_000_000, "dollar")),
 ])
 def test_numbers(input_str, expected):
     res = extract(input_str)
+    print(res)
     assert len(res) == 1
-    assert res[0][0] * res[0][2] == expected
+    assert res[0] == expected

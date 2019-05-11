@@ -16,7 +16,7 @@ def extract(text):
         cooldown = 0
 
         # search for sequence of "zahlwörtern"
-        while index+cooldown < len(text) and doeswork(transform_to_digit, text[index+cooldown]):
+        while index+cooldown < len(text) and doeswork(transform_to_digit, " ".join(text[index:index+cooldown+1])):
             if cooldown == 0:
                 candidate = text[index+cooldown]
             else:
@@ -40,6 +40,11 @@ def extract(text):
                 continue
         # at this point, candidate contains the number part as a float
 
+        if index+cooldown < len(text) and text[index+cooldown] in ("dollar", "dollars"):
+            final.append((candidate, "dollar"))
+            cooldown += 1
+            continue
+
         metric = str()
         final_m = 0
         for i in range(3):
@@ -49,7 +54,7 @@ def extract(text):
             if doeswork(ureg, metric):
                 final_m = ureg(metric)
         try:
-            final.append([candidate, index, final_m])
+            final.append(candidate * final_m)
         except:
             pass
     return(final)
@@ -63,9 +68,10 @@ def doeswork(function, element):
         return False
 
 def transform_to_digit(digit):
+    print(digit)
     nums = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,"nine":9, 'ten':10,'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,'sixteen':16,'seventeen':17,'eighteen':18,'nineteen':19, 'twenty':20,'thirty':30,'forty':40,'fifty':50,'sixty':60,'seventy':70,'eighty':80,'ninety':90, 'hundred':100,'thousand':1000, 'million':1000000, 'billion': 1000000000}
     nums_10 = [0,1,2,3,4,5,6,7,8,9]
-    digit = digit.split()
+    digit = [d for d in digit.split() if d != "and"]
     dezimal=10
     point=False
     first_run=True
