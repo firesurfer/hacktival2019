@@ -15,13 +15,13 @@ if __name__ == "__main__":
     # Parse input parameters (video and subtitle file)
     parser = argparse.ArgumentParser(description='Understanding units and costs better')
     parser.add_argument('videofilename')
-    parser.add_argument('subtitlefilename')
+    #parser.add_argument('subtitlefilename')
     args = parser.parse_args()
     videopath = Path(args.videofilename)
-    subpath = Path(args.subtitlefilename)
-    if not videopath.is_file() or not subpath.is_file():
-        raise Exception
+    #subpath = Path(args.subtitlefilename)
+    #if not videopath.is_file() or not subpath.is_file():
+    #    raise Exception
 
-    window = MainWindow()
+    window = MainWindow(videopath, None)
     window.show()
     sys.exit(app.exec_())
