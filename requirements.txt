@@ -1,4 +1,3 @@
-pip:
-    pyqt5
-    youtube-transcript-api
-    pytube
+pyqt5
+youtube-transcript-api
+pytube
