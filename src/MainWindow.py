@@ -5,17 +5,14 @@ from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPixmap, QImage, QFont         
 import os
+from Downloader import SubscriptionDownloader
 
 class MainWindow(QMainWindow):
 
     #The subtitlePath is optional, if it is none we can run a speech recognition instead.
-    def __init__(self, videoPath = None, subtitlePath = None):
+    def __init__(self, loader):
         super().__init__()
-        if videoPath == None:
-            print("Videopath may not be none")
-            #raise Exception("Videopath may not be none!")
-        self.videoPath = videoPath
-        self.subtitlePath = subtitlePath
+        self.loader = loader
     
         self.initUI()
 
@@ -24,19 +21,19 @@ class MainWindow(QMainWindow):
         self.resize(400,400)
         
         self.setWindowTitle("Automatisches Einheiten in Relationssetzungsprogramm")
-        centralWidget = MainWidget()
+        centralWidget = MainWidget(self.loader)
         self.setCentralWidget(centralWidget)
-        
-        centralWidget.openVideo(self.videoPath)
+
+        centralWidget.openVideo(os.path.abspath(self.loader.videoPath()))
             
        
         
 class MainWidget(QWidget):
     resized = QtCore.pyqtSignal()
-    def __init__(self, parent=None):
+    def __init__(self,loader, parent=None):
         super().__init__(parent)
         self.initUI()
-    
+        self.loader = loader
     def openVideo(self,path):
         print(path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(str(path))))
@@ -115,6 +112,10 @@ class MainWidget(QWidget):
         
         self.playerLayout.addLayout(relationLayout)
         
+        self.subtitleLabel = QLabel()
+        self.subtitleLabel.setFont(QFont('Arial', 15))
+        self.playerLayout.addWidget(self.subtitleLabel)
+        
         controlLayout = QHBoxLayout()
 
         controlLayout.addSpacing(10)
@@ -122,7 +123,7 @@ class MainWidget(QWidget):
         self.startStopBtn = QPushButton()
         self.startStopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
         controlLayout.addWidget(self.startStopBtn)
-        
+        controlLayout.addSpacing(10)
         
         #Player position
         self.positionSlider = QSlider(Qt.Horizontal)
@@ -132,7 +133,7 @@ class MainWidget(QWidget):
         
         self.timeLabel = QLabel("")
         controlLayout.addWidget(self.timeLabel)
-        
+        controlLayout.addSpacing(10)
         self.playerLayout.addLayout(controlLayout)
         
         self.setLayout(self.mainLayout)
@@ -165,6 +166,7 @@ class MainWidget(QWidget):
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
         self.timeLabel.setText(self.humanize_time(self.mediaPlayer.position()/1000))
+        self.subtitleLabel.setText("Subtitles: " + self.loader.subtitleAtPosition(position/1000))
     def scrollBarChanged(self):
         self.mediaPlayer.setPosition(self.positionSlider.value())
 
