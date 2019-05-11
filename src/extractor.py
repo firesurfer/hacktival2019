@@ -4,6 +4,7 @@ from fractions import Fraction
 
 ureg = UnitRegistry()
 
+
 def extract(captions):
     strings = [t['text'] for t in captions]
     for cap, nums in zip(captions, extract_inner(strings)):
@@ -48,7 +49,7 @@ def extract_inner(strings):
                 while doeswork(transform_to_digit, text[index+cooldown]):
                     #if cooldown == 1:
                     adding_element += " " + text[index+cooldown]
-            #cooldown += 1
+            # cooldown += 1
             except:
                 continue
         # at this point, candidate contains the number part as a float
@@ -71,7 +72,7 @@ def extract_inner(strings):
                 break
             metric += " " + text[index+cooldown+i]
             if doeswork(ureg, metric):
-                for i,j in enumerate(metric.split()):
+                for i, j in enumerate(metric.split()):
                     if j in ("at", "has"):
                         metric = metric.split()
                         del(metric[i])
@@ -94,53 +95,61 @@ def doeswork(function, element):
     except:
         return False
 
+
 def transform_to_digit(digit):
     # print(digit)
-    nums = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,"nine":9, 'ten':10,'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,'sixteen':16,'seventeen':17,'eighteen':18,'nineteen':19, 'twenty':20,'thirty':30,'forty':40,'fifty':50,'sixty':60,'seventy':70,'eighty':80,'ninety':90, 'hundred':100,'thousand':1000, 'million':1000000, 'billion': 1000000000}
+    nums = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+            'six': 6, 'seven': 7, 'eight': 8, "nine": 9, 'ten': 10, 'eleven': 11,
+            'twelve': 12, 'thirteen': 13, 'fourteen': 14, 'fifteen': 15,
+            'sixteen': 16, 'seventeen': 17, 'eighteen': 18, 'nineteen': 19,
+            'twenty': 20, 'thirty': 30, 'forty': 40, 'fifty': 50, 'sixty': 60,
+            'seventy': 70, 'eighty': 80, 'ninety': 90, 'hundred': 100, 'thousand': 1000,
+            'million': 1000000, 'billion': 1000000000
+    }
     nums_10 = [0,1,2,3,4,5,6,7,8,9]
     digit = [d for d in digit.split() if d != "and"]
-    dezimal=10
-    point=False
-    first_run=True
+    dezimal = 10
+    point = False
+    first_run = True
     for element in digit:
-        nope=0
+        nope = 0
         try:
             current = Fraction(element)
         except:
-            nope+=1
+            nope += 1
         try:
             current = Fraction(nums[element])
         except:
-            nope+=1
+            nope += 1
 
-        if element=='point':
-            point=True
+        if element == 'point':
+            point = True
             if first_run:
-                previous=0
-                final=0
-                first_run= False
+                previous = 0
+                final = 0
+                first_run = False
             continue
         else:
-            if nope==2:
+            if nope == 2:
                 raise Exception('nope')
         
-        if(first_run):
+        if first_run:
             previous = current
             final = current
-            first_run=False
+            first_run = False
             continue
         if point:
             final = Fraction(final)
             if current in nums_10:
-                final+=Fraction(current, dezimal)
-                dezimal*=10
+                final += Fraction(current, dezimal)
+                dezimal *= 10
             else:
-                final*=current
+                final *= current
         else:
-            if current>previous:
-                final*=current
+            if current > previous:
+                final *= current
             else:
-                final+=current
-        previous=current
-    return(float(final))
+                final += current
+        previous = current
+    return float(final)
 
