@@ -4,7 +4,7 @@ from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
 from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPixmap, QImage          
-
+import os
 
 class MainWindow(QMainWindow):
 
@@ -62,12 +62,14 @@ class MainWidget(QWidget):
         #Units label
         unitsLayout = QHBoxLayout()
         
-        unitsImg = QPixmap.fromImage(QImage("./icon/index.jpeg"))
-        self.unitsIcon = QLabel()
-        self.unitsIcon.setPixmap(unitsImg.scaled(40,40))
+        if(os.path.isfile("./icon/index.jpeg")):
+            unitsImg = QPixmap.fromImage(QImage("./icon/index.jpeg"))
+            self.unitsIcon = QLabel()
+            self.unitsIcon.setPixmap(unitsImg.scaled(40,40))
+            unitsLayout.addWidget(self.unitsIcon)
         
         self.topUnits = QLabel("Units:")
-        unitsLayout.addWidget(self.unitsIcon)
+       
         unitsLayout.addWidget(self.topUnits)
        
         
@@ -78,29 +80,31 @@ class MainWidget(QWidget):
         relationLayout = QHBoxLayout()
         
         #Icons and Labels
-        environmentImg = QPixmap.fromImage(QImage("./icon/environment.png"))
-        self.environmentIcon = QLabel()
-   
-        self.environmentIcon.setPixmap(environmentImg.scaled(40,40))
+        if(os.path.isfile("./icon/index.jpeg")):
+            environmentImg = QPixmap.fromImage(QImage("./icon/environment.png"))
+            self.environmentIcon = QLabel()
+            self.environmentIcon.setPixmap(environmentImg.scaled(40,40))
+            relationLayout.addWidget(self.environmentIcon)
+            
         self.environmentText = QLabel("Text")
-        
-        militaryImg = QPixmap.fromImage(QImage("./icon/military.png"))
-        self.militaryIcon = QLabel()
-        self.militaryIcon.setPixmap(militaryImg.scaled(40,40))
-        self.militaryText = QLabel("Text")
-        
-        socialImg = QPixmap.fromImage(QImage("./icon/social.png"))
-        self.socialIcon = QLabel()
-        self.socialIcon.setPixmap(socialImg.scaled(40,40))
-        self.socialText = QLabel("Text")
-        
-        relationLayout.addWidget(self.environmentIcon)
         relationLayout.addWidget(self.environmentText)
         relationLayout.addStretch(1)
-        relationLayout.addWidget(self.militaryIcon)
+        
+        if(os.path.isfile("./icon/index.jpeg")):
+            militaryImg = QPixmap.fromImage(QImage("./icon/military.png"))
+            self.militaryIcon = QLabel()
+            self.militaryIcon.setPixmap(militaryImg.scaled(40,40))
+            relationLayout.addWidget(self.militaryIcon)
+        self.militaryText = QLabel("Text")
         relationLayout.addWidget(self.militaryText)
         relationLayout.addStretch(1)
-        relationLayout.addWidget(self.socialIcon)
+        
+        if(os.path.isfile("./icon/index.jpeg")):
+            socialImg = QPixmap.fromImage(QImage("./icon/social.png"))
+            self.socialIcon = QLabel()
+            self.socialIcon.setPixmap(socialImg.scaled(40,40))
+            relationLayout.addWidget(self.socialIcon)
+        self.socialText = QLabel("Text")
         relationLayout.addWidget(self.socialText)
         
         self.playerLayout.addLayout(relationLayout)
