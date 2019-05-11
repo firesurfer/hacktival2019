@@ -31,7 +31,7 @@ class SubscriptionDownloader:
         return self.vid_path
     def subtitlePath(self):
         return self.sub_path
-    def subtitleAtPosition(self, secs):
+    def subtitleAtPosition(self, secs, window = True):
        
         
         
@@ -46,14 +46,16 @@ class SubscriptionDownloader:
                        
                         
                         if  float(start) > float(secs):
-                            text = "" 
-                            if index > 0:
-                                prevVal = value[index-1]
-                                text += prevVal["text"] + " "
+                            text = ""
+                            if window: 
+                                if index > 0:
+                                    prevVal = value[index-1]
+                                    text += prevVal["text"] + " "
                             
                             text += val["text"] + " "
-                            nextVal = value[index+1]
-                            text += nextVal["text"] + " "
+                            if window:
+                                nextVal = value[index+1]
+                                text += nextVal["text"] + " "
                             self.lastText = text
                             return text
         return self.lastText
