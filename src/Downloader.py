@@ -20,7 +20,10 @@ class SubscriptionDownloader:
         if not Path.exists(self.dl_path):
             os.makedirs(self.dl_path)
     def download(self):
-        #self.title = YouTube(self.url).title
+        try:
+            self.title = YouTube(self.url).title
+        except:
+            pass
         if not Path.exists(self.vid_path):
             YouTube(self.url).streams.first().download(self.dl_path, "vid")
         if not Path.exists(self.sub_path):
@@ -53,17 +56,17 @@ class SubscriptionDownloader:
                        
                         
                         if  float(start) > float(secs):
-                            text = ""
+                            text = []
                             #If you need the step before comment in
                             #if window:  
                             #    if index > 0:
                             #        prevVal = value[index-1]
                             #        text += prevVal["text"] + " "
                             
-                            text += val["text"] + " "
+                            text.append(val["text"])
                             if window:
                                 nextVal = value[index+1]
-                                text += nextVal["text"] + " "
+                                text.append(nextVal["text"])
                             self.lastText = text
                             return text
         return self.lastText
