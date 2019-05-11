@@ -2,3 +2,6 @@ pyqt5
 youtube-transcript-api
 pytube
 qdarkstyle
+pint
+pytest
+word2number
