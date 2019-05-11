@@ -7,9 +7,15 @@ from PyQt5.QtCore import QDir, Qt, QUrl
 
 class MainWindow(QMainWindow):
 
-    def __init__(self):
+    #The subtitlePath is optional, if it is none we can run a speech recognition instead.
+    def __init__(self, videoPath = None, subtitlePath = None):
         super().__init__()
         self.initUI()
+        if videoPath == None:
+            print("Videopath may not be none")
+            raise Execption("Videopath may not be none!")
+        self.videoPath = videoPath
+        self.subtitlePath = subtitlePath
     
     def initUI(self):
        
