@@ -6,12 +6,13 @@ from pathlib import Path
 
 from PyQt5.QtWidgets import  QApplication
 from MainWindow import MainWindow
+import qdarkstyle
 
 if __name__ == "__main__":
     
     
     app = QApplication(sys.argv)
-
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     # Parse input parameters (video and subtitle file)
     parser = argparse.ArgumentParser(description='Understanding units and costs better')
     parser.add_argument('videofilename')

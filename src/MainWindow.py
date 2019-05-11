@@ -62,8 +62,8 @@ class MainWidget(QWidget):
         #Units label
         unitsLayout = QHBoxLayout()
         
-        if(os.path.isfile("./icon/index.jpeg")):
-            unitsImg = QPixmap.fromImage(QImage("./icon/index.jpeg"))
+        if(os.path.isfile("./icon/index.png")):
+            unitsImg = QPixmap.fromImage(QImage("./icon/index.png"))
             self.unitsIcon = QLabel()
             self.unitsIcon.setPixmap(unitsImg.scaled(40,40))
             unitsLayout.addWidget(self.unitsIcon)
@@ -71,6 +71,7 @@ class MainWidget(QWidget):
         self.topUnits = QLabel("Units:")
        
         unitsLayout.addWidget(self.topUnits)
+        unitsLayout.addStretch(1)
        
         
         self.mediaPlayer.setVideoOutput(self.videoWidget)
@@ -80,7 +81,7 @@ class MainWidget(QWidget):
         relationLayout = QHBoxLayout()
         
         #Icons and Labels
-        if(os.path.isfile("./icon/index.jpeg")):
+        if(os.path.isfile("./icon/environment.png")):
             environmentImg = QPixmap.fromImage(QImage("./icon/environment.png"))
             self.environmentIcon = QLabel()
             self.environmentIcon.setPixmap(environmentImg.scaled(40,40))
@@ -90,7 +91,7 @@ class MainWidget(QWidget):
         relationLayout.addWidget(self.environmentText)
         relationLayout.addStretch(1)
         
-        if(os.path.isfile("./icon/index.jpeg")):
+        if(os.path.isfile("./icon/military.png")):
             militaryImg = QPixmap.fromImage(QImage("./icon/military.png"))
             self.militaryIcon = QLabel()
             self.militaryIcon.setPixmap(militaryImg.scaled(40,40))
@@ -99,7 +100,7 @@ class MainWidget(QWidget):
         relationLayout.addWidget(self.militaryText)
         relationLayout.addStretch(1)
         
-        if(os.path.isfile("./icon/index.jpeg")):
+        if(os.path.isfile("./icon/social.png")):
             socialImg = QPixmap.fromImage(QImage("./icon/social.png"))
             self.socialIcon = QLabel()
             self.socialIcon.setPixmap(socialImg.scaled(40,40))
@@ -119,6 +120,7 @@ class MainWidget(QWidget):
         #Player position
         self.positionSlider = QSlider(Qt.Horizontal)
         self.positionSlider.setRange(0, 0)
+        self.positionSlider.sliderReleased.connect(self.scrollBarChanged)
         controlLayout.addWidget(self.positionSlider)
         
         self.timeLabel = QLabel("")
@@ -156,6 +158,8 @@ class MainWidget(QWidget):
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
         self.timeLabel.setText(self.humanize_time(self.mediaPlayer.position()/1000))
+    def scrollBarChanged(self):
+        self.mediaPlayer.setPosition(self.positionSlider.value())
 
     def durationChanged(self, duration):
         self.positionSlider.setRange(0, duration)
