@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon
 import os
 from Downloader import SubscriptionDownloader
 from LoadIcons import IconLoader
-import extractor
+
 
 class MainWindow(QMainWindow):
 
@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
        
         self.resize(1500,800)
         
-        self.setWindowTitle("Automatisches Einheiten in Relationssetzungsprogramm")
+        self.setWindowTitle("How Much Is That?         " + self.loader.videoTitle())
         centralWidget = MainWidget(self.loader)
         self.setCentralWidget(centralWidget)
 
@@ -55,10 +55,7 @@ class MainWidget(QWidget):
         self.notificationList.setIconSize(QSize(45,45))
         self.playerLayout = QVBoxLayout()
         
-        videoTitleLabel = QLabel(self.loader.videoTitle())
-        videoTitleLabel.setFont(QFont("Arial",18))
-        
-        self.playerLayout.addWidget(videoTitleLabel)
+       
         item = QListWidgetItem()
         item.setIcon(QIcon(self.iconLoader.getIcon("environment")))
         item.setText("Test")
@@ -140,7 +137,7 @@ class MainWidget(QWidget):
         self.timeLabel.setText(self.humanize_time(self.mediaPlayer.position()/1000))
         subtitle = self.loader.subtitleAtPosition(position/1000)
         print(subtitle)
-        self.subtitleLabel.setText(subtitle[0] + " " + subtitle[1])
+        self.subtitleLabel.setText(subtitle[0] + " " + str(subtitle[3]))
         
         #Get Texts in this form:
         # 1. original value
