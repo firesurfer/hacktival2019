@@ -32,13 +32,22 @@ class Converter:
         #}
         self.latest_measurement = None
 
+    def number_beautifier(self,n):
+        millnames = ['', ' Thousand', ' Million', ' Billion', ' Trillion']
+        n = float(n)
+        millidx = max(0, min(len(millnames) - 1,
+                             int(math.floor(0 if n == 0 else math.log10(abs(n)) / 3))))
+
+        return '{:.0f}{}'.format(n / 10 ** (3 * millidx), millnames[millidx])
+
+
 
     def what_to_show(self,input, europe = True):
         output = []
         if type(input) is tuple:
-            if input[1] not in self.money_conversion: # freakin people
+            if input[1] not in self.money_conversion:  # freakin people
                 return []
-            inputstring = " ".join(map(str, input))
+            inputstring = self.number_beautifier(input[0]) + " " + input[1]
             output.append((inputstring, input[1]))
             dollarvalue = self.convert_currency(input[0], input[1], "dollar")
             if europe:
@@ -46,7 +55,7 @@ class Converter:
             else:
                 converted = (dollarvalue, "dollar")
 
-            convertedstring = " ".join(map(str, converted))
+            convertedstring = self.number_beautifier(converted[0]) + " " + converted[1]
             output.append((convertedstring, converted[1]))
             compstrings = self.relate_to(dollarvalue, self.money_comp)
             for comp in compstrings:
