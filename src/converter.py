@@ -15,15 +15,15 @@ class Converter:
             "pound": 1.3
         }
         self.length = [
-            (0.1 * ureg.millimeter, "length", "{:.2f} * the width human hair"),
-            (878.36 * ureg.kilometer, "length", "{:.2f} * the distance Paris -> Berlin"),
-            (384400 * ureg.kilometer, "length", "{:.2f} * the distance to the moon")
+            (0.1 * ureg.millimeter, "length", "{:.2f} x the width human hair"),
+            (878.36 * ureg.kilometer, "length", "{:.2f} x the distance Paris -> Berlin"),
+            (384400 * ureg.kilometer, "length", "{:.2f} x the distance to the moon")
         ]
         self.money_comp = [
-            (59039, "dollar", "{:.2f} * the median annual US income", ),
-            (20700000000, "nasa", "{:.2f} * the NASA annual budget", ),
-            (686074048000, "military", "{:.2f} * the US military budget"),
-            (19390000000000, "dollar", "{:.2f} * the US GDP")
+            (59039, "dollar", "{:.2f} x median US income p.a.", ),
+            (20700000000, "nasa", "{:.2f} x the NASA budget p.a.", ),
+            (686074048000, "military", "{:.2f} x US military budget p.a."),
+            (19390000000000, "dollar", "{:.2f} x the US GDP")
         ]
 
         #self.area = {  # in m^2
@@ -39,8 +39,6 @@ class Converter:
                              int(math.floor(0 if n == 0 else math.log10(abs(n)) / 3))))
 
         return '{:.0f}{}'.format(n / 10 ** (3 * millidx), millnames[millidx])
-
-
 
     def what_to_show(self,input, europe = True):
         output = []
@@ -74,12 +72,10 @@ class Converter:
 
         return output
 
-
-
     def convert_currency(self, value, source_currency, goal_currency):
 
         conv = self.money_conversion
-        return (conv[goal_currency] / conv[source_currency]) * value
+        return (conv[source_currency] / conv[goal_currency]) * value
 
     def relate_to(self, value, comp_list): # expects value in Dollars
         comp_with_factors = list()
@@ -95,23 +91,6 @@ class Converter:
             icon = element[0][1]
             compstrings.append((showstring, icon))
         return compstrings
-
-
-
-
-
-        sortedfactors = deepcopy(factors)
-        sortedfactors.sort()
-        index1 = factors.index(sortedfactors[0])
-        index2 = factors.index(sortedfactors[1])
-        return self.money[index1], self.money[index2]
-
-
-
-
-    def convert_unit(self, input, europe):
-        output = input.to_base_units()  # system defined at top (mks -> metric)
-        return output.to_compact()
 
 
 def convert_uint(value, europe):
