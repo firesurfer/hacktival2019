@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon
 import os
 from Downloader import SubscriptionDownloader
 from LoadIcons import IconLoader
-
+from converter import converter
 
 class MainWindow(QMainWindow):
 
@@ -38,7 +38,7 @@ class MainWidget(QWidget):
         self.loader = loader
         self.iconLoader = IconLoader()
         self.initUI()
-
+        self.conv = converter()
     def getIconLoader(self):
         return self.iconLoader
     def openVideo(self,path):
@@ -139,18 +139,11 @@ class MainWidget(QWidget):
         print(subtitle)
         self.subtitleLabel.setText(subtitle[2] + " " + str(subtitle[3]))
         
-        #Get Texts in this form:
-        # 1. original value
-        # 2. conversion
-        # 3. relations
-        # Create a list in the previous order and create list of the same size containing the icons (as pixmaps).
-        # Example for reading a pixmap environmentImg = QPixmap.fromImage(QImage("./icon/environment.png"))
-        # Create a CustomListItem with both lists as argument
-        # Use this code:
-        # myItem = CustomListItem(list1, list2)
-        # for item in myItem.getListItems():
-        #    self.notificationList.addItem(item)
-        # self.notificationList.scrollToBottom()
+        elementsToShow = self.conv.what_to_show(subtitle[3])
+        listItem = CustomListItem(elementsToShow)
+        for item in myItem.getListItems():
+            self.notificationList.addItem(item)
+        self.notificationList.scrollToBottom()
     def scrollBarChanged(self):
         self.mediaPlayer.setPosition(self.positionSlider.value())
 
@@ -169,16 +162,13 @@ class MainWidget(QWidget):
 
         
 class CustomListItem():
-    def __init__(self, texts, icons):
-        if len(texts) != len(icons):
-            raise Exception("Size of texts list and size of icon list must be the same")
-        
+    def __init__(self, elements):
         self.items = []
-        for index, text in enumerate(texts):
+        for text,icon in enumerate(elements):
             item = QListWidgetItem()
             item.setText(text)
             item.setFont(QFont("Arial",20))
-            item.setIcon(QIcon(icons[index].scaled(40,40)))        
+            item.setIcon(QIcon(icons[icon]))        
             self.items.append(item)
     def getListItems(self):
         return self.items
