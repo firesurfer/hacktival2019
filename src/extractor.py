@@ -67,6 +67,8 @@ def extract_inner(strings):
         for i in range(3):
             if index+cooldown+i+1 > len(text):
                 continue
+            if doeswork(transform_to_digit, text[index+cooldown+i]):
+                break
             metric += " " + text[index+cooldown+i]
             if doeswork(ureg, metric):
                 for i,j in enumerate(metric.split()):
