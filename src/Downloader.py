@@ -15,6 +15,7 @@ class SubscriptionDownloader:
         self.sub_path = self.dl_path / Path("sub.dmp")
         self.vid_path = self.dl_path / Path("vid.mp4")
         self.lastText = ""
+        self.offset = 0
         if not Path.exists(self.dl_path):
             os.makedirs(self.dl_path)
     def download(self):
@@ -31,6 +32,8 @@ class SubscriptionDownloader:
         return self.vid_path
     def subtitlePath(self):
         return self.sub_path
+    def setOffset(self, off):
+        self.offset = off
     def subtitleAtPosition(self, secs, window = True):
        
         
@@ -40,7 +43,7 @@ class SubscriptionDownloader:
                 for key,value in sub.items():
                     for index,val in enumerate(value):
                         #print(secs)
-                        start = float(val["start"])
+                        start = float(val["start"]) + self.offset
                         end = float(val["start"])+ float(val["duration"])
                         
                        
