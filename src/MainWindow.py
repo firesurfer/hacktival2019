@@ -7,6 +7,7 @@ from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon
 import os
 from Downloader import SubscriptionDownloader
 from LoadIcons import IconLoader
+import extractor
 
 class MainWindow(QMainWindow):
 
@@ -125,7 +126,9 @@ class MainWidget(QWidget):
     def positionChanged(self, position):
         self.positionSlider.setValue(position)
         self.timeLabel.setText(self.humanize_time(self.mediaPlayer.position()/1000))
-        self.subtitleLabel.setText("Subtitles: " + self.loader.subtitleAtPosition(position/1000))
+        subtitle = self.loader.subtitleAtPosition(position/1000)
+        print(subtitle)
+        self.subtitleLabel.setText(subtitle + " " + str(extractor.extract(subtitle)))
         
         #Get Texts in this form:
         # 1. original value

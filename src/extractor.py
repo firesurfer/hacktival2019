@@ -15,7 +15,7 @@ def extract(text):
         cooldown = 0
 
         # search for sequence of "zahlwörtern"
-        while doeswork(w2n.word_to_num, text[index+cooldown]):
+        while index+cooldown > len(text) and doeswork(w2n.word_to_num, text[index+cooldown]):
             if cooldown == 0:
                 candidate = text[index+cooldown]
             else:
