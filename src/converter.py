@@ -36,6 +36,8 @@ class Converter:
     def what_to_show(self,input, europe = True):
         output = []
         if type(input) is tuple:
+            if input[1] not in self.money_conversion: # freakin people
+                return []
             inputstring = " ".join(map(str, input))
             output.append((inputstring, input[1]))
             dollarvalue = self.convert_currency(input[0], input[1], "dollar")
