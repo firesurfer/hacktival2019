@@ -40,8 +40,6 @@ class Converter:
 
         return '{:.0f}{}'.format(n / 10 ** (3 * millidx), millnames[millidx])
 
-
-
     def what_to_show(self,input, europe = True):
         output = []
         if type(input) is tuple:
@@ -74,8 +72,6 @@ class Converter:
 
         return output
 
-
-
     def convert_currency(self, value, source_currency, goal_currency):
 
         conv = self.money_conversion
@@ -95,23 +91,6 @@ class Converter:
             icon = element[0][1]
             compstrings.append((showstring, icon))
         return compstrings
-
-
-
-
-
-        sortedfactors = deepcopy(factors)
-        sortedfactors.sort()
-        index1 = factors.index(sortedfactors[0])
-        index2 = factors.index(sortedfactors[1])
-        return self.money[index1], self.money[index2]
-
-
-
-
-    def convert_unit(self, input, europe):
-        output = input.to_base_units()  # system defined at top (mks -> metric)
-        return output.to_compact()
 
 
 def convert_uint(value, europe):
