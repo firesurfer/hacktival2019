@@ -13,7 +13,7 @@ class MainWindow(QMainWindow):
         self.initUI()
         if videoPath == None:
             print("Videopath may not be none")
-            raise Execption("Videopath may not be none!")
+            raise Exception("Videopath may not be none!")
         self.videoPath = videoPath
         self.subtitlePath = subtitlePath
     
