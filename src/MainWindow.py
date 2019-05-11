@@ -38,7 +38,7 @@ class MainWidget(QWidget):
         self.loader = loader
         self.iconLoader = IconLoader()
         self.initUI()
-        self.conv = converter()
+        #self.conv = converter()
     def getIconLoader(self):
         return self.iconLoader
     def openVideo(self,path):
@@ -139,11 +139,11 @@ class MainWidget(QWidget):
         print(subtitle)
         self.subtitleLabel.setText(subtitle[2] + " " + str(subtitle[3]))
         
-        elementsToShow = self.conv.what_to_show(subtitle[3])
-        listItem = CustomListItem(elementsToShow)
-        for item in myItem.getListItems():
-            self.notificationList.addItem(item)
-        self.notificationList.scrollToBottom()
+        #elementsToShow = self.conv.what_to_show(subtitle[3])
+        #listItem = CustomListItem(elementsToShow)
+        #for item in myItem.getListItems():
+        #    self.notificationList.addItem(item)
+        #self.notificationList.scrollToBottom()
     def scrollBarChanged(self):
         self.mediaPlayer.setPosition(self.positionSlider.value())
 
