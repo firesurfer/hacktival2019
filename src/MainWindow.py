@@ -5,17 +5,14 @@ from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPixmap, QImage, QFont         
 import os
+from Downloader import SubscriptionDownloader
 
 class MainWindow(QMainWindow):
 
     #The subtitlePath is optional, if it is none we can run a speech recognition instead.
-    def __init__(self, videoPath = None, subtitlePath = None):
+    def __init__(self, loader):
         super().__init__()
-        if videoPath == None:
-            print("Videopath may not be none")
-            #raise Exception("Videopath may not be none!")
-        self.videoPath = videoPath
-        self.subtitlePath = subtitlePath
+        self.loader = loader
     
         self.initUI()
 
@@ -27,7 +24,7 @@ class MainWindow(QMainWindow):
         centralWidget = MainWidget()
         self.setCentralWidget(centralWidget)
         
-        centralWidget.openVideo(self.videoPath)
+        centralWidget.openVideo(self.loader.videoPath())
             
        
         
@@ -122,7 +119,7 @@ class MainWidget(QWidget):
         self.startStopBtn = QPushButton()
         self.startStopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
         controlLayout.addWidget(self.startStopBtn)
-        
+        controlLayout.addSpacing(10)
         
         #Player position
         self.positionSlider = QSlider(Qt.Horizontal)
@@ -132,7 +129,7 @@ class MainWidget(QWidget):
         
         self.timeLabel = QLabel("")
         controlLayout.addWidget(self.timeLabel)
-        
+        controlLayout.addSpacing(10)
         self.playerLayout.addLayout(controlLayout)
         
         self.setLayout(self.mainLayout)
