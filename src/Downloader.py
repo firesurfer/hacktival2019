@@ -49,19 +49,24 @@ class SubscriptionDownloader:
                 for key,value in sub.items():
                     for index,val in enumerate(value):
                         subtitleTemp.append(val)
-        
+                        print(val)
+
+       
         self.subtitleList = extractor.extract(subtitleTemp)
+        
                         
     def subtitleAtPosition(self, secs):
         for sub in self.subtitleList:
+            print(sub)
             start = float(sub["start"]) + self.offset
             end = float(sub["start"])+ float(sub["duration"])
             text = sub["text"]
-            number = sub["number"}
+            number = sub["values"]
                         
             if float(start) > float(secs):  
-                self.lastText = {start,end,text,number}
-        return self.lastText
+                self.lastSub = (start,end,text,number)
+                return self.lastSub
+        return self.lastSub
     
 
 

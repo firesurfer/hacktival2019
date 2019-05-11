@@ -137,7 +137,7 @@ class MainWidget(QWidget):
         self.timeLabel.setText(self.humanize_time(self.mediaPlayer.position()/1000))
         subtitle = self.loader.subtitleAtPosition(position/1000)
         print(subtitle)
-        self.subtitleLabel.setText(subtitle[0] + " " + str(subtitle[3]))
+        self.subtitleLabel.setText(subtitle[2] + " " + str(subtitle[3]))
         
         #Get Texts in this form:
         # 1. original value
