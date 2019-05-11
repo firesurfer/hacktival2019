@@ -2,7 +2,9 @@ import pytest
 from extractor import extract_inner, extract
 
 from pint import UnitRegistry
-ureg = UnitRegistry()
+import converter
+from converter import Converter
+ureg = converter.ureg
 
 
 @pytest.mark.parametrize("input_str, expected", [
@@ -60,3 +62,30 @@ def test_full():
 
     assert False
 """
+
+def test_converter():
+    obj = converter()
+
+    exp = [
+        ('53000000000 dollar', 'dollar'),
+        ('59360000000.00001 euro', 'euro'),
+        ('2.56 * the NASA annual budget', 'nasa'),
+        ('0.08 * the US military budget', 'military')
+    ]
+    assert obj.what_to_show((53_000_000_000, "dollar")) == exp
+
+
+def test_converter():
+    obj = Converter()
+
+    exp = [
+        ('1000000 yard', 'yard'),
+        ('914.40 kilometer', '<dummy>'),
+        ('1138.49 yard / kilometer * the distance Paris -> Berlin', 'length')
+    ]
+
+    res = obj.what_to_show(1000 * 1000 * ureg.yard)
+    print(res)
+    assert res == exp
+
+

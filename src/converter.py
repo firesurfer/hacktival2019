@@ -5,7 +5,7 @@ from copy import deepcopy
 ureg = UnitRegistry(system='mks')  # metric
 
 
-class converter:
+class Converter:
 
     def __init__(self):
 
@@ -15,15 +15,15 @@ class converter:
             "pound": 1.3
         }
         self.length = [
-            (0.1 * ureg.millimeter, "length", "{} * the width human hair"),
-            (878.36 * ureg.kilometer, "length", "{} * the distance Paris -> Berlin"),
-            (384400 * ureg.kilometer, "length", "{} * the distance to the moon")
+            (0.1 * ureg.millimeter, "length", "{:.2f} * the width human hair"),
+            (878.36 * ureg.kilometer, "length", "{:.2f} * the distance Paris -> Berlin"),
+            (384400 * ureg.kilometer, "length", "{:.2f} * the distance to the moon")
         ]
         self.money_comp = [
-            (59039 * ureg.dollar, "dollar", "{} * the median annual US income", ),
-            (20700000000 * ureg.dollar, "nasa", "{} * the NASA annual budget", ),
-            (686074048000 * ureg.dollar, "military", "{} * the US military budget"),
-            (19390000000000 * ureg.dollar, "dollar", "{} * the US GDP")
+            (59039, "dollar", "{:.2f} * the median annual US income", ),
+            (20700000000, "nasa", "{:.2f} * the NASA annual budget", ),
+            (686074048000, "military", "{:.2f} * the US military budget"),
+            (19390000000000, "dollar", "{:.2f} * the US GDP")
         ]
 
         #self.area = {  # in m^2
@@ -47,6 +47,17 @@ class converter:
             convertedstring = " ".join(map(str, converted))
             output.append((convertedstring, converted[1]))
             compstrings = self.relate_to(dollarvalue, self.money_comp)
+            for comp in compstrings:
+                output.append(comp)
+        else:
+            output.append((str(input), str(input.units)))
+            converted = convert_uint(input, europe)
+            output.append((converted, "<dummy>"))
+
+            compstrings = []
+            ureg.default_system = 'mks'
+            if input.to_base_units().units == "meter":
+                compstrings = self.relate_to(input, self.length)
             for comp in compstrings:
                 output.append(comp)
 
