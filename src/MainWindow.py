@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QStyle, QWidget, QGraphicsTextItem, QGraphicsView, QGraphicsScene, QSpacerItem, QListWidget, QListWidgetItem
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
-from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF
+from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF, QSize
 from PyQt5 import QtCore
-from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon      
+from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon  
 import os
 from Downloader import SubscriptionDownloader
 from LoadIcons import IconLoader
@@ -27,16 +27,20 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(centralWidget)
 
         centralWidget.openVideo(os.path.abspath(self.loader.videoPath()))
-            
+       
+       
        
         
 class MainWidget(QWidget):
     resized = QtCore.pyqtSignal()
     def __init__(self,loader, parent=None):
         super().__init__(parent)
-        self.initUI()
         self.loader = loader
         self.iconLoader = IconLoader()
+        self.initUI()
+
+    def getIconLoader(self):
+        return self.iconLoader
     def openVideo(self,path):
         print(path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(str(path))))
@@ -48,10 +52,14 @@ class MainWidget(QWidget):
         self.notificationList = QListWidget()
         self.notificationList.setMinimumWidth(350)
         self.notificationList.setMaximumWidth(400)
-        
+        self.notificationList.setIconSize(QSize(45,45))
         self.playerLayout = QVBoxLayout()
 
-
+        item = QListWidgetItem()
+        item.setIcon(QIcon(self.iconLoader.getIcon("environment")))
+        item.setText("Test")
+        item.setFont(QFont("Arial",20))
+        self.notificationList.addItem(item)
         
         self.mainLayout.addLayout(self.playerLayout)
         self.mainLayout.addWidget(self.notificationList)
@@ -169,7 +177,7 @@ class CustomListItem():
             item = QListWidgetItem()
             item.setText(text)
             item.setFont(QFont("Arial",20))
-            item.setIcon(icons[index].scaled(40,40))        
+            item.setIcon(QIcon(icons[index].scaled(40,40)))        
             self.items.append(item)
     def getListItems(self):
         return self.items
