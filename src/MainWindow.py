@@ -6,6 +6,7 @@ from PyQt5 import QtCore
 from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon      
 import os
 from Downloader import SubscriptionDownloader
+from LoadIcons import IconLoader
 
 class MainWindow(QMainWindow):
 
@@ -34,6 +35,7 @@ class MainWidget(QWidget):
         super().__init__(parent)
         self.initUI()
         self.loader = loader
+        self.iconLoader = IconLoader()
     def openVideo(self,path):
         print(path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(str(path))))
