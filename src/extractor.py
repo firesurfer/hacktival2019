@@ -69,8 +69,11 @@ def extract_inner(strings):
                 continue
             metric += " " + text[index+cooldown+i]
             if doeswork(ureg, metric):
-                for i in metric.split():
-                    if i is in ("at", "has"):
+                for i,j in enumerate(metric.split()):
+                    if j in ("at", "has"):
+                        metric = metric.split()
+                        del(metric[i])
+                        metric = " ".join(metric)
                         continue
                 final_m = ureg(metric)
         try:
@@ -138,5 +141,4 @@ def transform_to_digit(digit):
                 final+=current
         previous=current
     return(float(final))
-
 
