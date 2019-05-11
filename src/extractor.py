@@ -69,6 +69,9 @@ def extract_inner(strings):
                 continue
             metric += " " + text[index+cooldown+i]
             if doeswork(ureg, metric):
+                for i in metric.split():
+                    if i is in ("at", "has"):
+                        continue
                 final_m = ureg(metric)
         try:
             if final_m == 0:
