@@ -4,11 +4,14 @@ from fractions import Fraction
 
 ureg = UnitRegistry()
     
-def extract(text):
-    text = text.lower().replace("pound-feet", "pound feet").split()
+def extract(text, text2):
+    # text2 is second line
+    tokens1 = text.lower().replace("pound-feet", "pound feet").split()
+    tokens2 = text2.lower().replace("pound-feet", "pound feet").split()
+    text = tokens1 + tokens2
     cooldown = 0
     final = []
-    for index, element in enumerate(text):
+    for index, element in enumerate(tokens1):
         if cooldown > 1:
             cooldown -= 1
             continue

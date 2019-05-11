@@ -37,7 +37,16 @@ def my_function(input_str):
     ("four billion dollars", (4_000_000_000, "dollar")),
 ])
 def test_numbers(input_str, expected):
-    res = extract(input_str)
+    res = extract(input_str, "")
     print(res)
     assert len(res) == 1
     assert res[0] == expected
+
+
+def test_second_line():
+    # spanning
+    assert extract("hello two", "hundred dollars for something") == [(200, "dollar")]
+
+    # second only
+    assert extract("hello foo", "fifty dollars for something") == []
+
