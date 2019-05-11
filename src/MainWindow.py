@@ -3,11 +3,11 @@ from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
 from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF, QSize
 from PyQt5 import QtCore
-from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon  
+from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon, QBrush 
 import os
 from Downloader import SubscriptionDownloader
 from LoadIcons import IconLoader
-from converter import converter
+from converter import Converter
 
 class MainWindow(QMainWindow):
 
@@ -38,7 +38,8 @@ class MainWidget(QWidget):
         self.loader = loader
         self.iconLoader = IconLoader()
         self.initUI()
-        self.conv = converter()
+        self.conv = Converter()
+        self.previousSub = ""
     def getIconLoader(self):
         return self.iconLoader
     def openVideo(self,path):
@@ -138,12 +139,19 @@ class MainWidget(QWidget):
         subtitle = self.loader.subtitleAtPosition(position/1000)
         print(subtitle)
         self.subtitleLabel.setText(subtitle[2] + " " + str(subtitle[3]))
-        
-        elementsToShow = self.conv.what_to_show(subtitle[3])
-        listItem = CustomListItem(elementsToShow)
-        for item in myItem.getListItems():
-            self.notificationList.addItem(item)
-        self.notificationList.scrollToBottom()
+        if self.previousSub == subtitle[2]:
+            return
+        self.previousSub = subtitle[2]
+        print(subtitle[3])
+        if subtitle[3]:
+            for sub in subtitle[3]:
+                
+                elementsToShow = self.conv.what_to_show(sub)
+                print(elementsToShow)
+                listItem = CustomListItem(elementsToShow, self.iconLoader)
+                for item in listItem.getListItems():
+                    self.notificationList.addItem(item)
+                self.notificationList.scrollToBottom()
     def scrollBarChanged(self):
         self.mediaPlayer.setPosition(self.positionSlider.value())
 
@@ -162,13 +170,15 @@ class MainWidget(QWidget):
 
         
 class CustomListItem():
-    def __init__(self, elements):
+    def __init__(self, elements,icons):
         self.items = []
-        for text,icon in enumerate(elements):
+        for text,icon in elements:
+            print(text)
+            print(icon)
             item = QListWidgetItem()
             item.setText(text)
             item.setFont(QFont("Arial",20))
-            item.setIcon(QIcon(icons[icon]))        
+            item.setIcon(QIcon(icons.getIcon(icon)))        
             self.items.append(item)
     def getListItems(self):
         return self.items
