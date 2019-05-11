@@ -5,7 +5,7 @@ import pickle
 
 from pytube import YouTube
 from youtube_transcript_api import YouTubeTranscriptApi
-
+import extractor
 
 class SubscriptionDownloader:
     def __init__(self,url):
@@ -14,9 +14,10 @@ class SubscriptionDownloader:
         self.dl_path = Path("./dl/" + self.video_id + "/")
         self.sub_path = self.dl_path / Path("sub.dmp")
         self.vid_path = self.dl_path / Path("vid.mp4")
-        self.lastText = ""
+        self.lastSub = {}
         self.title = ""
         self.offset = 0
+        self.subtitleList = []
         if not Path.exists(self.dl_path):
             os.makedirs(self.dl_path)
     def download(self):
@@ -41,34 +42,25 @@ class SubscriptionDownloader:
         return self.sub_path
     def setOffset(self, off):
         self.offset = off
-    def subtitleAtPosition(self, secs, window = True):
-       
-        
-        
+    def process(self):
+        subtitleTemp = []
         for sub in self.subtitles:
             if type(sub) is dict:
                 for key,value in sub.items():
                     for index,val in enumerate(value):
-                        #print(secs)
-                        start = float(val["start"]) + self.offset
-                        end = float(val["start"])+ float(val["duration"])
+                        subtitleTemp.append(val)
+        
+        self.subtitleList = extractor.extract(subtitleTemp)
                         
-                       
+    def subtitleAtPosition(self, secs):
+        for sub in self.subtitleList:
+            start = float(sub["start"]) + self.offset
+            end = float(sub["start"])+ float(sub["duration"])
+            text = sub["text"]
+            number = sub["number"}
                         
-                        if  float(start) > float(secs):
-                            text = []
-                            #If you need the step before comment in
-                            #if window:  
-                            #    if index > 0:
-                            #        prevVal = value[index-1]
-                            #        text += prevVal["text"] + " "
-                            
-                            text.append(val["text"])
-                            if window:
-                                nextVal = value[index+1]
-                                text.append(nextVal["text"])
-                            self.lastText = text
-                            return text
+            if float(start) > float(secs):  
+                self.lastText = {start,end,text,number}
         return self.lastText
     
 
