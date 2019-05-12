@@ -3,7 +3,7 @@ from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
 from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF, QSize
 from PyQt5 import QtCore
-from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon, QBrush 
+from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon, QBrush, QColor
 import os
 from Downloader import SubscriptionDownloader
 from LoadIcons import IconLoader
@@ -53,15 +53,11 @@ class MainWidget(QWidget):
         self.notificationList = QListWidget()
         self.notificationList.setMinimumWidth(350)
         self.notificationList.setMaximumWidth(400)
-        self.notificationList.setIconSize(QSize(45,45))
+        self.notificationList.setIconSize(QSize(40,40))
         self.playerLayout = QVBoxLayout()
         
        
-        item = QListWidgetItem()
-        item.setIcon(QIcon(self.iconLoader.getIcon("environment")))
-        item.setText("Test")
-        item.setFont(QFont("Arial",20))
-        self.notificationList.addItem(item)
+
         
         self.mainLayout.addLayout(self.playerLayout)
         self.mainLayout.addWidget(self.notificationList)
@@ -145,13 +141,16 @@ class MainWidget(QWidget):
         print(subtitle[3])
         if subtitle[3]:
             for sub in subtitle[3]:
-                
-                elementsToShow = self.conv.what_to_show(sub)
-                print(elementsToShow)
-                listItem = CustomListItem(elementsToShow, self.iconLoader)
-                for item in listItem.getListItems():
-                    self.notificationList.addItem(item)
-                self.notificationList.scrollToBottom()
+                try:
+                    elementsToShow = self.conv.what_to_show(sub)
+                    print(elementsToShow)
+                    listItem = CustomListItem(elementsToShow, self.iconLoader)
+                    for item in listItem.getListItems():
+                        self.notificationList.addItem(item)
+                    self.notificationList.scrollToBottom()
+                except:
+                    print("Error converting value")
+                    pass
     def scrollBarChanged(self):
         self.mediaPlayer.setPosition(self.positionSlider.value())
 
@@ -172,14 +171,40 @@ class MainWidget(QWidget):
 class CustomListItem():
     def __init__(self, elements,icons):
         self.items = []
+        i = 0
         for text,icon in elements:
+           
+                
             print(text)
             print(icon)
             item = QListWidgetItem()
-            item.setText(text)
-            item.setFont(QFont("Arial",20))
+            if i == 0:
+                item.setBackground(QBrush(QColor(66,69,71)))
+                item.setFont(QFont("Arial",20))
+                item.setText(text)
+                sizeHint = item.sizeHint()
+                item.setSizeHint(QSize(sizeHint.width(),sizeHint.height()+80))
+            elif i % 2:
+                item.setBackground(QBrush(QColor(92,89,94)))  
+                item.setFont(QFont("Arial",18))
+                item.setText(" " + text)
+                sizeHint = item.sizeHint()
+                item.setSizeHint(QSize(sizeHint.width(),sizeHint.height()+65))
+            else:
+                item.setBackground(QBrush(QColor(92,85,94)))  
+                item.setFont(QFont("Arial",18))
+                item.setText(" " + text)
+                sizeHint = item.sizeHint()
+                item.setSizeHint(QSize(sizeHint.width(),sizeHint.height()+65))
+            
+            
+           
             item.setIcon(QIcon(icons.getIcon(icon)))        
             self.items.append(item)
+            i = i + 1
+        spacerItem = QListWidgetItem()
+        spacerItem.setFlags(Qt.NoItemFlags)
+        self.items.append(spacerItem)
     def getListItems(self):
         return self.items
 
