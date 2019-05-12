@@ -150,7 +150,6 @@ class MainWidget(QWidget):
         if self.previousSub == subtitle[2]:
             return
         self.previousSub = subtitle[2]
-        print(subtitle[3])
         if subtitle[3]:
             for sub in subtitle[3]:
                 try:

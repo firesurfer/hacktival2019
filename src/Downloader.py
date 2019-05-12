@@ -14,7 +14,7 @@ class SubscriptionDownloader:
         self.dl_path = Path("./dl/" + self.video_id + "/")
         self.sub_path = self.dl_path / Path("sub.dmp")
         self.vid_path = self.dl_path / Path("vid.mp4")
-        self.lastSub = {}
+        self.lastSub = ()
         self.title = ""
         self.offset = 0
         self.subtitleList = []
@@ -72,7 +72,7 @@ class SubscriptionDownloader:
         end = float(sub["start"])+ float(sub["duration"])
         text = sub["text"]
         number = sub["values"]
-        self.lastSub = sub
+        self.lastSub = (start,end,text,number)
         for sub in self.subtitleList:
             
             start = float(sub["start"]) + self.offset
