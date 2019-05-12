@@ -64,6 +64,15 @@ class SubscriptionDownloader:
         
                         
     def subtitleAtPosition(self, secs):
+       
+        
+        sub = self.subtitleList[0]
+       
+        start = float(sub["start"]) + self.offset
+        end = float(sub["start"])+ float(sub["duration"])
+        text = sub["text"]
+        number = sub["values"]
+        self.lastSub = sub
         for sub in self.subtitleList:
             
             start = float(sub["start"]) + self.offset
@@ -71,9 +80,11 @@ class SubscriptionDownloader:
             text = sub["text"]
             number = sub["values"]
                         
-            if float(start) > float(secs):  
-                self.lastSub = (start,end,text,number)
+            if float(start) > float(secs):
+               
                 return self.lastSub
+
+            self.lastSub = (start,end,text,number)
         return self.lastSub
     
 

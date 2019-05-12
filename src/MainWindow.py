@@ -33,6 +33,9 @@ class MainWindow(QMainWindow):
         self.centralWidget().mute()
     def enableSubtitles(self):
         self.centralWidget().enableSubtitles()
+      
+
+
         
 class MainWidget(QWidget):
     resized = QtCore.pyqtSignal()
