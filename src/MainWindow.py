@@ -141,13 +141,16 @@ class MainWidget(QWidget):
         print(subtitle[3])
         if subtitle[3]:
             for sub in subtitle[3]:
-                
-                elementsToShow = self.conv.what_to_show(sub)
-                print(elementsToShow)
-                listItem = CustomListItem(elementsToShow, self.iconLoader)
-                for item in listItem.getListItems():
-                    self.notificationList.addItem(item)
-                self.notificationList.scrollToBottom()
+                try:
+                    elementsToShow = self.conv.what_to_show(sub)
+                    print(elementsToShow)
+                    listItem = CustomListItem(elementsToShow, self.iconLoader)
+                    for item in listItem.getListItems():
+                        self.notificationList.addItem(item)
+                    self.notificationList.scrollToBottom()
+                except:
+                    print("Error converting value")
+                    pass
     def scrollBarChanged(self):
         self.mediaPlayer.setPosition(self.positionSlider.value())
 
