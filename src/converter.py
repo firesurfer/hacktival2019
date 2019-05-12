@@ -59,9 +59,9 @@ class Converter:
                 output.append(comp)
         else:
             output.append((pretty_print_value(input), str(input.units)))
-            converted, unit = convert_uint(input, europe)
+            converted = convert_uint(input, europe)
             if converted is not None:
-                output.append((converted, unit))
+                output.append(converted)
 
             compstrings = []
             ureg.default_system = 'mks'
@@ -112,7 +112,7 @@ def convert_uint(value, europe):
     if value.units == ureg.mile / ureg.gallon:
         output = (100 / value).to(ureg.l / ureg.kilometer)
 
-    return pretty_print_value(output), str(output.unit)
+    return pretty_print_value(output), str(output.units)
 
 
 def pretty_print_value(value):
