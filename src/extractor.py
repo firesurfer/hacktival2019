@@ -2,7 +2,7 @@ from word2number import w2n
 from pint import UnitRegistry
 from fractions import Fraction
 
-ureg = UnitRegistry()
+from converter import ureg
 
 
 def extract(captions):
@@ -13,7 +13,7 @@ def extract(captions):
 
 
 def extract_inner(strings):
-    token_list = [s.lower().replace("pound-feet", "pound feet").split() for s in strings]
+    token_list = [s.lower().replace("pound-feet", "pound feet").replace("pound feet", "lbf foot").split() for s in strings]
     text = sum(token_list, [])
     final = [[] for _ in range(len(strings))]
     idxs = []
