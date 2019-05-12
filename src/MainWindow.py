@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QStyle, QWidget, QGraphicsTextItem, QGraphicsView, QGraphicsScene, QSpacerItem, QListWidget, QListWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QStyle, QWidget, QGraphicsTextItem, QGraphicsView, QGraphicsScene, QSpacerItem, QListWidget, QListWidgetItem, QLineEdit
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
 from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF, QSize
@@ -63,6 +63,10 @@ class MainWidget(QWidget):
         self.playerLayout = QVBoxLayout()
         
         self.searchBtn = QPushButton("...")
+        self.searchText = QLineEdit(self)
+        self.searchText.setVisible(False)
+        self.loadButton = QPushButton("Load Video")
+        self.loadButton.setVisible(False)
        
 
         
@@ -94,6 +98,7 @@ class MainWidget(QWidget):
 
         controlLayout.addSpacing(10)
         controlLayout.addWidget(self.searchBtn)
+        self.searchBtn.clicked.connect(self.toggleShowLoadField)
         #Player button
         self.startStopBtn = QPushButton()
         self.startStopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
@@ -109,7 +114,17 @@ class MainWidget(QWidget):
         self.timeLabel = QLabel("")
         controlLayout.addWidget(self.timeLabel)
         controlLayout.addSpacing(10)
+
+        loadLayout = QHBoxLayout()
+
+        loadLayout.addSpacing(10)
+        loadLayout.addWidget(self.searchText)
+        loadLayout.addWidget(self.loadButton)
+        self.loadButton.clicked.connect(self.loadNewVideo)
+
         self.playerLayout.addLayout(controlLayout)
+        self.playerLayout.addLayout(loadLayout)
+
         
         self.setLayout(self.mainLayout)
         
@@ -174,6 +189,18 @@ class MainWidget(QWidget):
         self.resized.emit()
         result = super(MainWidget, self).resizeEvent(event)
         return result
+
+    def toggleShowLoadField(self):
+        self.loadButton.setVisible(self.loadButton.isHidden())
+        self.searchText.setVisible(self.searchText.isHidden())
+
+    def loadNewVideo(self):
+        url = self.searchText.text()
+
+        path = None
+        self.openVideo(path)
+
+
         
 
         
