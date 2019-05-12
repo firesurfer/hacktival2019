@@ -1,10 +1,12 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QStyle, QWidget, QGraphicsTextItem, QGraphicsView, QGraphicsScene, QSpacerItem, QListWidget, QListWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QStyle, QWidget, QGraphicsTextItem, QGraphicsView, QGraphicsScene, QSpacerItem, QListWidget, QListWidgetItem, QLineEdit
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
 from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF, QSize
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon, QBrush, QColor
 import os
+from time import sleep
+from pathlib import Path
 from Downloader import SubscriptionDownloader
 from LoadIcons import IconLoader
 from converter import Converter
@@ -22,32 +24,44 @@ class MainWindow(QMainWindow):
        
         self.resize(1500,800)
         
-        self.setWindowTitle("How Much Is That?         " + self.loader.videoTitle())
+        self.setWindowTitle("How Much Is That?         ")
         centralWidget = MainWidget(self.loader)
         self.setCentralWidget(centralWidget)
-
-        centralWidget.openVideo(os.path.abspath(self.loader.videoPath()))
-       
        
     def mute(self):
         self.centralWidget().mute()
+
     def enableSubtitles(self):
         self.centralWidget().enableSubtitles()
-        
+      
+
 class MainWidget(QWidget):
     resized = QtCore.pyqtSignal()
-    def __init__(self,loader, parent=None):
+    def __init__(self,args, parent=None):
         super().__init__(parent)
-        self.loader = loader
+        self.args = args
         self.iconLoader = IconLoader()
         self.initUI()
         self.conv = Converter()
         self.previousSub = ""
+        self.loadVideo(Path(args.url))
+
     def getIconLoader(self):
         return self.iconLoader
+
     def openVideo(self,path):
         print(path)
+        path = os.path.abspath(path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(str(path))))
+
+    def loadVideo(self,url):
+        self.loader = SubscriptionDownloader(Path(url))
+        self.loader.download()
+        while not self.loader.downloadFinished():
+            sleep(1)
+        print("Adding no offset")
+        self.loader.process()
+        self.openVideo(self.loader.videoPath())
 
     def mute(self):
         self.mediaPlayer.setVolume(0)   
@@ -55,6 +69,8 @@ class MainWidget(QWidget):
         self.subtitleLabel.setHidden(False)
     
     def initUI(self):
+
+
         self.mainLayout = QHBoxLayout()
         self.notificationList = QListWidget()
         self.notificationList.setMinimumWidth(350)
@@ -62,6 +78,11 @@ class MainWidget(QWidget):
         self.notificationList.setIconSize(QSize(40,40))
         self.playerLayout = QVBoxLayout()
         
+        self.searchBtn = QPushButton("...")
+        self.searchText = QLineEdit(self)
+        self.searchText.setVisible(False)
+        self.loadButton = QPushButton("Load Video")
+        self.loadButton.setVisible(False)
        
 
         
@@ -92,6 +113,8 @@ class MainWidget(QWidget):
         controlLayout = QHBoxLayout()
 
         controlLayout.addSpacing(10)
+        controlLayout.addWidget(self.searchBtn)
+        self.searchBtn.clicked.connect(self.toggleShowLoadField)
         #Player button
         self.startStopBtn = QPushButton()
         self.startStopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
@@ -107,7 +130,17 @@ class MainWidget(QWidget):
         self.timeLabel = QLabel("")
         controlLayout.addWidget(self.timeLabel)
         controlLayout.addSpacing(10)
+
+        loadLayout = QHBoxLayout()
+
+        loadLayout.addSpacing(10)
+        loadLayout.addWidget(self.searchText)
+        loadLayout.addWidget(self.loadButton)
+        self.loadButton.clicked.connect(self.loadNewVideo)
+
         self.playerLayout.addLayout(controlLayout)
+        self.playerLayout.addLayout(loadLayout)
+
         
         self.setLayout(self.mainLayout)
         
@@ -145,7 +178,6 @@ class MainWidget(QWidget):
         if self.previousSub == subtitle[2]:
             return
         self.previousSub = subtitle[2]
-        print(subtitle[3])
         if subtitle[3]:
             for sub in subtitle[3]:
                 try:
@@ -172,7 +204,14 @@ class MainWidget(QWidget):
         self.resized.emit()
         result = super(MainWidget, self).resizeEvent(event)
         return result
-        
+
+    def toggleShowLoadField(self):
+        self.loadButton.setVisible(self.loadButton.isHidden())
+        self.searchText.setVisible(self.searchText.isHidden())
+
+    def loadNewVideo(self):
+        url = self.searchText.text()
+        self.loadVideo(url)
 
         
 class CustomListItem():
@@ -216,5 +255,6 @@ class CustomListItem():
         return self.items
 
         
-        
+
+
         
