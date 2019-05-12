@@ -58,9 +58,10 @@ class Converter:
             for comp in compstrings:
                 output.append(comp)
         else:
-            output.append((str(input), str(input.units)))
+            output.append((pretty_print_value(input), str(input.units)))
             converted = convert_uint(input, europe)
-            output.append((converted, "<dummy>"))
+            if converted is not None:
+                output.append((converted, "<dummy>"))
 
             compstrings = []
             ureg.default_system = 'mks'
@@ -94,5 +95,44 @@ class Converter:
 
 def convert_uint(value, europe):
     ureg.default_system = 'mks' if europe else 'imperial'
-    output = value.to_base_units()  # system defined at top (mks -> metric)
-    return f"{output.to_compact():.2f}"
+
+    # no conversion
+    if value.units in (ureg.liter, ureg.degree, ureg.revolutions_per_minute):
+        return None
+
+
+    # default conversion
+    output = value.to_base_units().to_compact()
+
+    # custom conversions
+    if value.units == ureg.horsepower:
+        output = value.to(ureg.kilowatt)
+    if value.units == ureg.force_pound * ureg.foot:
+        output = value.to(ureg.newton * ureg.meter)
+    if value.units == ureg.mile / ureg.gallon:
+        output = (100 / value).to(ureg.l / ureg.kilometer)
+
+    return pretty_print_value(output)
+
+
+def pretty_print_value(value):
+    num = int(value.magnitude) if int(value.magnitude) == value.magnitude else round(value.magnitude, 2)
+    unit = pretty_print_unit(value)
+    return f"{num} {unit}"
+
+def pretty_print_unit(value):
+    data = [
+        (ureg.degree, "°"),
+        (ureg.newton * ureg.meter, "Nm"),
+        (ureg.revolutions_per_minute, "rpm"),
+        (ureg.foot * ureg.force_pound, "lb-ft"),
+        (ureg.liter, "l"),
+        (ureg.horsepower, "hp"),
+        (ureg.kilowatt, "kW"),
+        (ureg.mile / ureg.gallon, "mpg"),
+        (ureg.liter / ureg.kilometer, "l/100km")
+    ]
+    for u, s in data:
+        if value.units == u:
+            return s
+    return str(value.units)
