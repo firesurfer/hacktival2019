@@ -44,7 +44,7 @@ class Converter:
         if type(input) is tuple:
             if input[1] not in self.money_conversion:  # freakin people
                 return []
-            inputstring = self.number_beautifier(input[0]) + " " + input[1]
+            inputstring = self.number_beautifier(input[0]) + " " + input[1] + "s"
             output.append((inputstring, input[1]))
             dollarvalue = self.convert_currency(input[0], input[1], "dollar")
             if europe:
