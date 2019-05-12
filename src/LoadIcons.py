@@ -8,7 +8,8 @@ class IconLoader():
     def listIcons(self):
         return self.icons.keys()
     def getIcon(self,name):
-        if os.path.isfile(self.icons[name]):
+        
+        if name in self.icons and os.path.isfile(self.icons[name]):
             pixmap = QPixmap.fromImage(QImage(self.icons[name]))
             return pixmap
         else:

@@ -53,7 +53,7 @@ class MainWidget(QWidget):
         self.notificationList = QListWidget()
         self.notificationList.setMinimumWidth(350)
         self.notificationList.setMaximumWidth(400)
-        self.notificationList.setIconSize(QSize(45,45))
+        self.notificationList.setIconSize(QSize(40,40))
         self.playerLayout = QVBoxLayout()
         
        
