@@ -62,6 +62,7 @@ class MainWidget(QWidget):
         self.notificationList.setIconSize(QSize(40,40))
         self.playerLayout = QVBoxLayout()
         
+        self.searchBtn = QPushButton("...")
        
 
         
@@ -92,6 +93,7 @@ class MainWidget(QWidget):
         controlLayout = QHBoxLayout()
 
         controlLayout.addSpacing(10)
+        controlLayout.addWidget(self.searchBtn)
         #Player button
         self.startStopBtn = QPushButton()
         self.startStopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
@@ -216,5 +218,6 @@ class CustomListItem():
         return self.items
 
         
-        
+
+
         

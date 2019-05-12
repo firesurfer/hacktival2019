@@ -21,13 +21,21 @@ class SubscriptionDownloader:
         if not Path.exists(self.dl_path):
             os.makedirs(self.dl_path)
     def download(self):
+        print("Downloading...")
         try:
             self.title = YouTube(self.url).title
         except:
             pass
         if not Path.exists(self.vid_path):
-            YouTube(self.url).streams.first().download(self.dl_path, "vid")
+            print("Downloading Video...")
+            while True:
+                try:
+                    YouTube(self.url).streams.first().download(self.dl_path, "vid")
+                    break
+                except KeyError:
+                    print("Download failed. Retry...")
         if not Path.exists(self.sub_path):
+            print("Downloading Transcript...")
             sub = YouTubeTranscriptApi.get_transcripts([self.video_id], languages=['en'])
             pickle.dump(sub, open(self.sub_path, "wb"))
         self.subtitles = pickle.load(open(self.sub_path,"rb"))
