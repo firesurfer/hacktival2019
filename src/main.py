@@ -19,7 +19,7 @@ if __name__ == "__main__":
     parser.add_argument('url')
     parser.add_argument("-o",'--offset', dest='offset', action='store', default=0, help='Pass an offset to the subtitle loader')
     parser.add_argument("-m",'--mute', dest='mute', action='store_true', default=False, help='Mute video')
-    parser.add_argument("-s",'--subtitles', dest='subtitles', action='store_true', default=True, help='Show subtitles text')
+    parser.add_argument("-s",'--subtitles', dest='subtitles', action='store_true', default=False, help='Show subtitles text')
 
     #parser.add_argument('subtitlefilename')
     args = parser.parse_args()
@@ -27,6 +27,9 @@ if __name__ == "__main__":
     offset = float(args.offset)
     mute = args.mute
     subtitles = args.subtitles
+    
+    
+    
     
     loader = SubscriptionDownloader(url)
     loader.download()
@@ -39,6 +42,8 @@ if __name__ == "__main__":
     #subpath = Path(args.subtitlefilename)
     #if not videopath.is_file() or not subpath.is_file():
     #    raise Exception
+
+
 
     window = MainWindow(loader)
     if mute:
