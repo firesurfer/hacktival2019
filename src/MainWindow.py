@@ -51,6 +51,7 @@ class MainWidget(QWidget):
 
     def openVideo(self,path):
         print(path)
+        path = os.path.abspath(path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(str(path))))
 
     def loadVideo(self,url):
