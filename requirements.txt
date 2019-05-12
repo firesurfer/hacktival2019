@@ -4,4 +4,4 @@ pytube
 qdarkstyle
 pint
 pytest
-word2number
+

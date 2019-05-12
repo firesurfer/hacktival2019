@@ -1,4 +1,3 @@
-from word2number import w2n
 from pint import UnitRegistry
 from fractions import Fraction
 
