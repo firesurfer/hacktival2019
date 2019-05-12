@@ -31,13 +31,7 @@ if __name__ == "__main__":
     
     
     
-    loader = SubscriptionDownloader(url)
-    loader.download()
-    while not loader.downloadFinished():
-        sleep(1)
-    print("Adding offset: " + str(offset))
-    loader.setOffset(offset)
-    loader.process()
+
     
     #subpath = Path(args.subtitlefilename)
     #if not videopath.is_file() or not subpath.is_file():
@@ -45,7 +39,7 @@ if __name__ == "__main__":
 
 
 
-    window = MainWindow(loader)
+    window = MainWindow(args)
     if mute:
         window.mute()
     if subtitles:

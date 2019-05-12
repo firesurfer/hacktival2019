@@ -5,6 +5,8 @@ from PyQt5.QtCore import  QDir, Qt, QUrl, QSizeF, QRectF, QPointF, QSize
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPixmap, QImage, QFont, QIcon, QBrush, QColor
 import os
+from time import sleep
+from pathlib import Path
 from Downloader import SubscriptionDownloader
 from LoadIcons import IconLoader
 from converter import Converter
@@ -22,35 +24,43 @@ class MainWindow(QMainWindow):
        
         self.resize(1500,800)
         
-        self.setWindowTitle("How Much Is That?         " + self.loader.videoTitle())
+        self.setWindowTitle("How Much Is That?         ")
         centralWidget = MainWidget(self.loader)
         self.setCentralWidget(centralWidget)
-
-        centralWidget.openVideo(os.path.abspath(self.loader.videoPath()))
-       
        
     def mute(self):
         self.centralWidget().mute()
+
     def enableSubtitles(self):
         self.centralWidget().enableSubtitles()
       
 
-
-        
 class MainWidget(QWidget):
     resized = QtCore.pyqtSignal()
-    def __init__(self,loader, parent=None):
+    def __init__(self,args, parent=None):
         super().__init__(parent)
-        self.loader = loader
+        self.args = args
         self.iconLoader = IconLoader()
         self.initUI()
         self.conv = Converter()
         self.previousSub = ""
+        self.loadVideo(Path(args.url))
+
     def getIconLoader(self):
         return self.iconLoader
+
     def openVideo(self,path):
         print(path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(str(path))))
+
+    def loadVideo(self,url):
+        self.loader = SubscriptionDownloader(Path(url))
+        self.loader.download()
+        while not self.loader.downloadFinished():
+            sleep(1)
+        print("Adding no offset")
+        self.loader.process()
+        self.openVideo(self.loader.videoPath())
 
     def mute(self):
         self.mediaPlayer.setVolume(0)   
@@ -58,6 +68,8 @@ class MainWidget(QWidget):
         self.subtitleLabel.setHidden(False)
     
     def initUI(self):
+
+
         self.mainLayout = QHBoxLayout()
         self.notificationList = QListWidget()
         self.notificationList.setMinimumWidth(350)
@@ -198,12 +210,7 @@ class MainWidget(QWidget):
 
     def loadNewVideo(self):
         url = self.searchText.text()
-
-        path = None
-        self.openVideo(path)
-
-
-        
+        self.loadVideo(url)
 
         
 class CustomListItem():
