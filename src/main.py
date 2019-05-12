@@ -18,6 +18,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Understanding units and costs better')
     parser.add_argument('url')
     parser.add_argument("-o",'--offset', dest='offset', action='store', default=0, help='Pass an offset to the subtitle loader')
+    parser.add_argument("-m",'--mute', dest='mute', action='store_true', default=False, help='Mute video')
 
     #parser.add_argument('subtitlefilename')
     args = parser.parse_args()
