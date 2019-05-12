@@ -4,7 +4,7 @@ import os
 
 class IconLoader():
     def __init__(self):
-        self.icons = {"euro":"icon/euro.png" , "dollar":"icon/dollar.png", "length" : "icon/index.png", "environment" : "icon/environment.png", "nasa": "icon/nasa.png", "social":"icon/social.png", "military":"icon/military.png" , "area": "icon/area.png", "soccer":"icon/soccer.png", "ruler": "icon/ruler.png"}
+        self.icons = {"euro":"icon/euro.png" , "dollar":"icon/dollar.png", "length" : "icon/index.png", "environment" : "icon/environment.png", "nasa": "icon/nasa.png", "social":"icon/social.png", "military":"icon/military.png" , "area": "icon/area.png", "soccer":"icon/soccer.png", "ruler": "icon/ruler.png", "rpm": "icon/rpm.png", "physics":"icon/physics.png"}
     def listIcons(self):
         return self.icons.keys()
     def getIcon(self,name):
@@ -13,4 +13,4 @@ class IconLoader():
             pixmap = QPixmap.fromImage(QImage(self.icons[name]))
             return pixmap
         else:
-            return QPixmap(40,40)
+            return QPixmap.fromImage(QImage(self.icons["physics"]))
