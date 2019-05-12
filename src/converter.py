@@ -19,7 +19,7 @@ class Converter:
             (384400 * ureg.kilometer, "length", "{:.2f} x the distance to the moon")
         ]
         self.money_comp = [
-            (59039, "dollar", "{:.2f} x Ø US income", ),
+            (59039, "dollar", "{:.0f} x Ø US income", ),
             (20700000000, "nasa", "{:.2f} x the NASA budget", ),
             #(686074048000, "military", "{:.2f} x US military budget"),
             (19390000000000, "dollar", "{:.2f} x the US GDP")
@@ -130,7 +130,9 @@ def pretty_print_unit(value):
         (ureg.horsepower, "hp"),
         (ureg.kilowatt, "kW"),
         (ureg.mile / ureg.gallon, "mpg"),
-        (ureg.liter / ureg.kilometer, "l/100km")
+        (ureg.liter / ureg.kilometer, "l/100km"),
+        (ureg.foot ** 2, "ft²"),
+        (ureg.m ** 2, "m²"),
     ]
     for u, s in data:
         if value.units == u:
