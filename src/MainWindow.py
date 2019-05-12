@@ -29,7 +29,10 @@ class MainWindow(QMainWindow):
         centralWidget.openVideo(os.path.abspath(self.loader.videoPath()))
        
        
-       
+    def mute(self):
+        self.centralWidget().mute()
+    def enableSubtitles(self):
+        self.centralWidget().enableSubtitles()
         
 class MainWidget(QWidget):
     resized = QtCore.pyqtSignal()
@@ -46,8 +49,11 @@ class MainWidget(QWidget):
         print(path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(str(path))))
 
-        
-     
+    def mute(self):
+        self.mediaPlayer.setVolume(0)   
+    def enableSubtitles(self):
+        self.subtitleLabel.setHidden(False)
+    
     def initUI(self):
         self.mainLayout = QHBoxLayout()
         self.notificationList = QListWidget()
@@ -80,6 +86,7 @@ class MainWidget(QWidget):
         
         self.subtitleLabel = QLabel()
         self.subtitleLabel.setFont(QFont('Arial', 15))
+        self.subtitleLabel.setHidden(True)
         self.playerLayout.addWidget(self.subtitleLabel)
         
         controlLayout = QHBoxLayout()
