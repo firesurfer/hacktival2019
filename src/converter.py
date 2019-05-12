@@ -19,9 +19,9 @@ class Converter:
             (384400 * ureg.kilometer, "length", "{:.2f} x the distance to the moon")
         ]
         self.money_comp = [
-            (59039, "dollar", "{:.2f} x median US income p.a.", ),
-            (20700000000, "nasa", "{:.2f} x the NASA budget p.a.", ),
-            #(686074048000, "military", "{:.2f} x US military budget p.a."),
+            (59039, "dollar", "{:.2f} x Ø US income", ),
+            (20700000000, "nasa", "{:.2f} x the NASA budget", ),
+            #(686074048000, "military", "{:.2f} x US military budget"),
             (19390000000000, "dollar", "{:.2f} x the US GDP")
         ]
 
