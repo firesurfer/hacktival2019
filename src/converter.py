@@ -14,14 +14,14 @@ class Converter:
             "pound": 1.3
         }
         self.length_comp = [
-            (0.1 * ureg.millimeter, "length", "{:.2f} x the width human hair"),
+            # (0.1 * ureg.millimeter, "length", "{:.2f} x the width human hair"),
             (878.36 * ureg.kilometer, "length", "{:.2f} x the distance Paris -> Berlin"),
             (384400 * ureg.kilometer, "length", "{:.2f} x the distance to the moon")
         ]
         self.money_comp = [
             (59039, "dollar", "{:.2f} x median US income p.a.", ),
             (20700000000, "nasa", "{:.2f} x the NASA budget p.a.", ),
-            (686074048000, "military", "{:.2f} x US military budget p.a."),
+            #(686074048000, "military", "{:.2f} x US military budget p.a."),
             (19390000000000, "dollar", "{:.2f} x the US GDP")
         ]
 
@@ -82,7 +82,7 @@ class Converter:
         for comp in comp_list:
             factor = value / comp[0]
             comp_with_factors.append((comp, factor))
-        filtered_comp_with_factors = list(filter(lambda x: 0.01 <= x[1] <= 1000, comp_with_factors))
+        filtered_comp_with_factors = list(filter(lambda x: 0.01 <= x[1] <= 1000000, comp_with_factors))
         if len(filtered_comp_with_factors) > 2:
             filtered_comp_with_factors = [filtered_comp_with_factors[0], filtered_comp_with_factors[-1]]
         compstrings = []
